@@ -1,0 +1,125 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.utem-logo {
+    display: block;
+    width: 150px;
+}
+
+.ftmk-logo {
+    display: block;
+    width: 400px;
+    margin: 0 auto;
+}
+
+.header h2 {
+    color: #333;
+    margin: 0;
+}
+
+.login-form {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #4a4a4a;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    color: white;
+    margin-bottom: 8px;
+}
+
+.input-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #e6b800;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.login-btn:hover {
+    background-color: #cca300;
+}
+
+#link {
+    text-align: center;
+    margin-top: 20px;
+    color: white;
+}
+
+#link a {
+    color: #e6b800;
+    text-decoration: none;
+}
+
+#link a:visited {
+    text-decoration: underline;
+}
+
+#link a:hover {
+    text-decoration: underline;
+    transform: scale(1.5); 
+    filter: brightness(1.2);
+    transition: transform 0.3s ease, filter 0.3s ease; 
+    font-size: large;
+}
+
+#link a:active {
+    text-decoration: underline;
+}
+
+#login-link{
+    text-align: center;
+    margin-top: 20px;
+    color: black;
+}
+
+#login-link a :hover{
+    text-decoration: underline;
+    transform: scale(1.5); 
+    filter: brightness(1.2);
+    transition: transform 0.3s ease, filter 0.3s ease; 
+    font-size: large;
+}
