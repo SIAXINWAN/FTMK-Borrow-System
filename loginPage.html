@@ -43,19 +43,27 @@
               />
               Password
             </label>
-            <div style="position: relative;">
+            <div style="position: relative">
               <input
                 type="password"
                 id="password"
                 name="password"
                 required
                 placeholder="abc123"
-                style="padding-right: 40px;"
+                style="padding-right: 40px"
               />
               <button
                 type="button"
                 id="toggle-password"
-                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;"
+                style="
+                  position: absolute;
+                  right: 10px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                "
               >
                 👁️
               </button>
@@ -80,9 +88,8 @@
         const userId = document.getElementById("userid").value;
         const password = document.getElementById("password").value;
 
-        
         if (userId === "Ali" && password === "abc123") {
-          window.location.href = "homePage.html";
+          window.location.href = "studentMainPage.html";
         } else {
           alert("Invalid User ID or Password!");
         }
@@ -95,14 +102,16 @@
           submitFormWithDefaults();
         });
 
-      document.getElementById("toggle-password").addEventListener("click", function () {
-        const passwordField = document.getElementById("password");
-        const type = passwordField.type === "password" ? "text" : "password";
-        passwordField.type = type;
+      document
+        .getElementById("toggle-password")
+        .addEventListener("click", function () {
+          const passwordField = document.getElementById("password");
+          const type = passwordField.type === "password" ? "text" : "password";
+          passwordField.type = type;
 
-        // Optionally, you can change the button icon
-        this.textContent = type === "password" ? "👁️" : "🙈";
-      });
+          // Optionally, you can change the button icon
+          this.textContent = type === "password" ? "👁️" : "🙈";
+        });
     </script>
   </body>
 </html>
