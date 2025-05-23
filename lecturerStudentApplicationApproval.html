@@ -4,10 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borrow Equipment - FTMK Borrow System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        table{
+            width: 80%;
+        }
+        header{
+            background-color: #ffcc00;
+        }
+
+        section table{
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 50px;
+        }
+
+        section table th, section table td{
+            text-align: center;
+        }
+
+        section th{
+            background-color: black;
+            color: white;
+            height: 50px;
+            border-right: 2px solid white;
+        }
+
+        section th:last-child {
+            border-right: black;
+        }
+
+        section tbody, section td{
+            border: 1px, solid, black;
+            border-right: 2px solid black;
+            border-collapse: collapse;
+        }
+
+        section td:last-child{
+            display: flex;
+            border-right: 1px solid black;
+        }
+
+        section tr{
+            height: 40px;
+        }
+
+        section td{
+            text-align: center;
+            vertical-align: middle;
+        }
+
+
+        .iconStyle{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            width: 30px;
+            height: 30px;
+        }
+
+        .tick{
+            background-color: greenyellow;
+        }
+
+        .cross{
+            background-color: red;
+        }
+
+        .buttonStyle{
+            height: 50px;
+            width: 50px;
+            background-color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>This is Lecturer Student Application Approval page</h1>
+        <table >
+            <tr>
+                <td><img src="images/ftmkLogo_Yellow.png" width="" height="80px"></td>
+                <td>
+                    <h1 style="text-align: center;">Student Application Approval</h1>
+                </td>
+            </tr>
+        </table>
     </header>
+    <section>
+        <table cellspacing = "0">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Student Name</th>
+                    <th>Equipment Name</th>
+                    <th>Reason</th>
+                    <th>Approval</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>CCK</td>
+                    <td>Camera Canon</td>
+                    <td>For workshop project usage</td>
+                    <td>
+                        <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
+                        <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>CCK</td>
+                    <td>Camera Canon</td>
+                    <td>For workshop project usage</td>
+                    <td>
+                        <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
+                        <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 </body>
 </html>
