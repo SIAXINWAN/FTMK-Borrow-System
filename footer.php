@@ -3,39 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FTMK Borrow System</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Document</title>
 </head>
 <body>
-    <header>
-        <div class="header-top">
-            <img src="images/ftmk-logo.png" alt="FTMK Logo" class="logo">
-        </div>
-        <div class="header-bar">
-            <div class="profile">
-                <img src="images/user-icon.png" alt="User Icon" class="input-icon">
-                Profile
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <h1>FTMK Borrow System</h1>
-        <div class="buttons">
-            <a href="securityOfficeBorrowApplicationConfirmation.html" class="button">
-                <i class="fas fa-file-invoice"></i>
-                <span>Borrow Application Confirmation</span>
-            </a>
-            <a href="securityOfficeBorrowHistory.html" class="button">
-                <i class="fas fa-history"></i>
-                <span>Borrow History</span>
-            </a>
-        </div>
-    </main>
-
     <footer>
         <div class="footer-content">
             <div class="contact">
