@@ -4,40 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FTMK Borrow System - Login</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      #notes,
+      center {
+        padding-bottom: 20px;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <img src="images/utem-logo.png" alt="UTeM Logo" class="utem-logo" />
-        <img src="images/ftmk-logo.png" alt="FTMK Logo" class="ftmk-logo" />
+        <img src="0images/utem-logo.png" alt="UTeM Logo" class="utem-logo" />
+        <img src="0images/ftmk-logo.png" alt="FTMK Logo" class="ftmk-logo" />
         <h2>Fakulti Teknologi Maklumat dan Komunikasi</h2>
       </div>
+
+      <p id="notes">
+        Some Notes : Just for now(will be deleted later) Id & Password (All is
+        1234) <br />
+        <center>D01/B01, L01, C01, T01, A01, S01</center>
+      </p>
 
       <div class="login-form">
         <form id="login-form" method="POST">
           <div class="form-group">
             <label for="userid">
               <img
-                src="images/user-icon.png"
+                src="0images/user-icon.png"
                 alt="User Icon"
                 class="input-icon"
               />
               User ID
             </label>
-            <input
-              type="text"
-              id="userid"
-              name="userid"
-              required
-              placeholder="Ali"
-            />
+            <input type="text" id="userid" name="userid" required />
           </div>
 
           <div class="form-group">
             <label for="password">
               <img
-                src="images/password-icon.png"
+                src="0images/password-icon.png"
                 alt="Password Icon"
                 class="input-icon"
               />
@@ -81,15 +87,29 @@
 
     <script>
       window.onload = function () {
-        document.getElementById("userid").value = "Ali";
-        document.getElementById("password").value = "abc123";
+        document.getElementById("password").value = "1234";
       };
       function submitFormWithDefaults() {
-        const userId = document.getElementById("userid").value;
+        const userId = document.getElementById("userid").value[0];
         const password = document.getElementById("password").value;
 
-        if (userId === "Ali" && password === "abc123") {
-          window.location.href = "studentMainPage.html";
+        if (
+          userId === "d" ||
+          userId === "D" ||
+          userId === "b" ||
+          (userId === "B" && password === "1234")
+        ) {
+          window.location.href = "1student/studentMainPage.html";
+        } else if (userId === "l" || (userId === "L" && password === "1234")) {
+          window.location.href = "2lecturer/lecturerMainPage.html";
+        } else if (userId === "c" || (userId === "C" && password === "1234")) {
+          window.location.href = "3companyRepair/companyRepairMainPage.html";
+        } else if (userId === "t" || (userId === "T" && password === "1234")) {
+          window.location.href = "4technician/technicianMainPage.html";
+        } else if (userId === "a" || (userId === "A" && password === "1234")) {
+          window.location.href = "5admin/adminMainPage.html";
+        } else if (userId === "s" || (userId === "S" && password === "1234")) {
+          window.location.href = "6securityOffice/SecurityOfficeMainPage.html";
         } else {
           alert("Invalid User ID or Password!");
         }
