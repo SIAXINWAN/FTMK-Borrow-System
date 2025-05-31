@@ -68,19 +68,23 @@ input[type="password"] {
 }
 
 .login-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #e6b800;
-    color: black;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background-color: #e6b800;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: background 0.2s, transform 0.2s;
 }
 
 .login-btn:hover {
-    background-color: #cca300;
+  background-color: #cca300;
+  transform: translateY(-2px) scale(1.04);
 }
 
 #link {
@@ -156,11 +160,10 @@ header {
 .profile {
     display: flex;
     align-items: center;
-    position: absolute;
-    right: 20px;
     cursor: pointer;
     color: #000;
     font-weight: bold;
+    padding: 5px 10px;
 }
 
 .input-icon {
@@ -170,15 +173,16 @@ header {
 }
 
 .header-bar {
-    height: 40px; 
+    height: 50px; 
     background: linear-gradient(to right, #ffcc00, #ffcc00);
-    width: calc(100% + 1cm);
-    margin-left: -0.5cm;
+    width: 100%;
+    margin-left: 0;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     padding-right: 30px;
+    gap: 24px; /* 增加间距，防止重叠 */
 }
 
 .profile {
@@ -188,6 +192,7 @@ header {
     color: #000;
     font-weight: bold;
     padding: 5px 10px;
+    /* 不要 position: absolute */
 }
 
 main {
@@ -332,4 +337,36 @@ footer p i {
 
 .address-text p {
     margin: 0;
+}
+
+.profile a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;     
+  color: inherit;            
+  background: none;
+  border: none;
+  outline: none;
+  padding: 6px 16px;
+  border-radius: 30px;
+  transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+}
+
+.profile a:hover, .profile a:focus {
+  transform: scale(1.04);
+}
+
+.profile .input-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e6b800;
+  background: #fff;
+  transition: border 0.2s;
+}
+
+.profile a:hover .input-icon {
+  border: 2px solid #b38f00;
 }
