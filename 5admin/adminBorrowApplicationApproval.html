@@ -15,9 +15,9 @@
         }
 
         section table{
+            clear: both;
             margin-left: auto;
             margin-right: auto;
-            margin-top: 50px;
         }
 
         section table th, section table td{
@@ -84,9 +84,16 @@
             margin: 0 auto;
         }
 
-        #filterTable td{
+        #filterTable tr{
+            display: flex;
+            flex-direction: row;
             border: 0;
-            justify-content: right;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        #filterTable td{
+            margin: 10px;
         }
     </style>
 </head>
@@ -101,7 +108,7 @@
             </tr>
         </table>
     </header>
-    <section>
+    <center>
         <form id="filterForm">
             <table id="filterTable">
                 <tr>
@@ -118,6 +125,8 @@
                 </tr>
             </table>
         </form>
+    </center>
+    <section>
         <table cellspacing = "0">
             <thead>
                 <tr>
@@ -190,6 +199,41 @@
                     numbering();
                 }
             });
+
+            $("#filter").change(function () 
+            { 
+                var filterValue = $(this).val();
+
+                var tbody = document.querySelector("section table tbody");
+                var rows = Array.from(tbody.querySelectorAll("tr"));
+
+                if (filterValue == "lecturer"){
+                    rows.forEach(element => {
+                        if (element.cells[2].textContent == "Lecturer"){
+                            $(element).show();
+                        }
+                        else {
+                            $(element).hide();
+                        }
+                    })
+                }
+                else if (filterValue == "student"){
+                    rows.forEach(element => {
+                        if (element.cells[2].textContent == "Student"){
+                            $(element).show();
+                        }
+                        else {
+                            $(element).hide();
+                        }
+                    })
+                }
+                else {
+                    rows.forEach(element => {
+                        $(element).show();
+                    })
+                }
+                numbering();
+            })
         });
 
         function numbering(){
@@ -198,8 +242,10 @@
 
             var counter = 1;
             rows.forEach(element => {
-                element.cells[0].textContent = counter;
-                counter += 1;
+                if ($(element).is(":visible")) {
+                    element.cells[0].textContent = counter;
+                    counter += 1;
+                }
             });
         }
     </script>
