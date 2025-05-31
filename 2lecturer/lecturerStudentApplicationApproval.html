@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borrow Equipment - FTMK Borrow System</title>
+    <title>Student Application Approval - FTMK Borrow System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
@@ -25,29 +25,17 @@
         }
 
         section th{
-            background-color: black;
+            background-color: rgb(53, 52, 52);;
             color: white;
-            height: 50px;
-            border-right: 2px solid white;
         }
 
-        section th:last-child {
-            border-right: black;
-        }
-
-        section tbody, section td{
-            border: 1px, solid, black;
-            border-right: 2px solid black;
+        section table, section th, section td{
+            border: 1.5px solid black;
             border-collapse: collapse;
         }
 
-        section td:last-child{
-            display: flex;
-            border-right: 1px solid black;
-        }
-
         section tr{
-            min-height: 40px;
+            height: 50px;
         }
 
         section td{
@@ -55,6 +43,10 @@
             vertical-align: middle;
         }
 
+
+        .buttonBox{
+            display: flex;
+        }
 
         .iconStyle{
             display: flex;
@@ -115,8 +107,10 @@
                     <td>Camera Canon</td>
                     <td>For workshop project usage</td>
                     <td>
-                        <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
-                        <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        <div class="buttonBox">
+                            <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
+                            <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -125,8 +119,10 @@
                     <td>Camera Canon</td>
                     <td>For workshop project usage</td>
                     <td>
-                        <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
-                        <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        <div class="buttonBox">
+                            <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
+                            <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -135,8 +131,10 @@
                     <td>Camera Canon</td>
                     <td>For workshop project usage</td>
                     <td>
-                        <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
-                        <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        <div class="buttonBox">
+                            <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
+                            <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        </div>
                     </td>
                 </tr>
             </tbody>
