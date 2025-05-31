@@ -84,15 +84,15 @@
           (userId === "B" && password === "1234")
         ) {
           window.location.href = "1student/studentMainPage.html";
-        } else if (userId === "l" || (userId === "L" && password === "1234")) {
+        } else if ((userId === "l" || userId === "L") && password === "1234") {
           window.location.href = "2lecturer/lecturerMainPage.html";
-        } else if (userId === "c" || (userId === "C" && password === "1234")) {
+        } else if ((userId === "c" || userId === "C") && password === "1234") {
           window.location.href = "3companyRepair/companyRepairMainPage.html";
-        } else if (userId === "t" || (userId === "T" && password === "1234")) {
+        } else if ((userId === "t" || userId === "T") && password === "1234") {
           window.location.href = "4technician/technicianMainPage.html";
-        } else if (userId === "a" || (userId === "A" && password === "1234")) {
+        } else if ((userId === "a" || userId === "A") && password === "1234") {
           window.location.href = "5admin/adminMainPage.html";
-        } else if (userId === "s" || (userId === "S" && password === "1234")) {
+        } else if ((userId === "s" || userId === "S") && password === "1234") {
           window.location.href = "6securityOffice/SecurityOfficeMainPage.html";
         } else {
           alert("Invalid User ID or Password!");
