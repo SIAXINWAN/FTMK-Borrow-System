@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Equipment Update - FTMK Borrow System</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+      }
+
+      table {
+        width: 80%;
+      }
+      header {
+        background-color: #ffcc00;
+      }
+      header img {
+        size: 0cap;
+      }
+
+      form {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 30px;
+      }
+
+      .form-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      label {
+        width: 180px;
+        font-size: 18px;
+        text-align: left;
+        margin-right: 20px;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      select {
+        flex: 1;
+        height: 35px;
+        padding: 0 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .button-row {
+        text-align: center;
+        margin-top: 30px;
+      }
+
+      button {
+        padding: 10px 30px;
+        font-size: 16px;
+        margin: 10px;
+        border: none;
+        background-color: #e6b800;
+        color: black;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #cca300;
+      }
+
+      a {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <table>
+        <tr>
+          <td>
+            <a href="adminMainPage.html"
+              ><img src="../0images/ftmkLogo_Yellow.png" width="" height="80px"
+            /></a>
+          </td>
+          <td>
+            <h1 style="text-align: center">Equipment Update</h1>
+          </td>
+        </tr>
+      </table>
+    </header>
+    <form action="" method="post">
+      <div class="form-row">
+        <label for="name">Equipment Name:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Enter equipment name here"
+          required
+        />
+      </div>
+
+      <div class="form-row">
+        <label for="brand">Equipment Brand:</label>
+        <input
+          type="text"
+          id="brand"
+          name="brand"
+          placeholder="Enter equipment brand here"
+          required
+        />
+      </div>
+
+      <div class="form-row">
+        <label for="model">Model Number:</label>
+        <input
+          type="text"
+          id="model"
+          name="model"
+          placeholder="Enter model number here"
+          required
+        />
+      </div>
+
+      <div class="form-row">
+        <label for="type">Type:</label>
+        <select name="type" id="type">
+          <option value="A" required>A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="quantity">Quantity:</label>
+        <input
+          type="number"
+          id="quantity"
+          name="quantity"
+          min="1"
+          max="100"
+          required
+          placeholder="1"
+        />
+      </div>
+
+      <div class="form-row">
+        <label for="description">Description:</label>
+        <input
+          type="text"
+          id="description"
+          name="description"
+          placeholder="Enter description here"
+          required
+        />
+      </div>
+
+      <div class="button-row">
+        <button type="submit">Update</button>
+        <a href="adminEquipmentInventory.html"
+          ><button type="button">Cancel</button></a
+        >
+      </div>
+    </form>
+  </body>
+</html>

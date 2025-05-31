@@ -160,10 +160,11 @@ header {
 .profile {
     display: flex;
     align-items: center;
+    position: absolute;
+    right: 20px;
     cursor: pointer;
     color: #000;
     font-weight: bold;
-    padding: 5px 10px;
 }
 
 .input-icon {
@@ -175,14 +176,15 @@ header {
 .header-bar {
     height: 50px; 
     background: linear-gradient(to right, #ffcc00, #ffcc00);
-    width: 100%;
-    margin-left: 0;
+    width: calc(100% + 1cm);
+    margin-left: -0.5cm;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     padding-right: 30px;
-    gap: 24px; /* 增加间距，防止重叠 */
+    gap: 24px;
+    margin-right: 40px;
 }
 
 .profile {
@@ -192,7 +194,6 @@ header {
     color: #000;
     font-weight: bold;
     padding: 5px 10px;
-    /* 不要 position: absolute */
 }
 
 main {
@@ -354,7 +355,10 @@ footer p i {
 }
 
 .profile a:hover, .profile a:focus {
+  background: #f5f5f5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   transform: scale(1.04);
+  color: #e6b800;
 }
 
 .profile .input-icon {
@@ -369,4 +373,17 @@ footer p i {
 
 .profile a:hover .input-icon {
   border: 2px solid #b38f00;
+}
+
+.header-bar > div a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+  padding: 6px 16px;
+  border-radius: 30px;
+  transition: background 0.2s, color 0.2s;
+}
+.header-bar > div a:hover {
+  background: #f5f5f5;
+  color: #e6b800;
 }
