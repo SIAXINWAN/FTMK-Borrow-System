@@ -25,24 +25,13 @@
         }
 
         section th{
-            background-color: black;
+            background-color: rgb(53, 52, 52);;;
             color: white;
-            border-right: 2px solid white;
         }
 
-        section th:last-child {
-            border-right: black;
-        }
-
-        section tbody, section td{
-            border: 1px, solid, black;
-            border-right: 2px solid black;
+        section table, section th, section td{
+            border: 1.5px, solid, black;
             border-collapse: collapse;
-        }
-
-        section td:last-child{
-            display: flex;
-            border-right: 1px solid black;
         }
 
         section tr{
@@ -95,6 +84,10 @@
         #filterTable td{
             margin: 10px;
         }
+
+        .buttonBox{
+            display: flex;
+        }
     </style>
 </head>
 <body>
@@ -146,8 +139,10 @@
                     <td>Camera Canon</td>
                     <td>For workshop project usage</td>
                     <td>
-                        <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
-                        <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        <div class="buttonBox">
+                            <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
+                            <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -157,8 +152,10 @@
                     <td>Camera Canon</td>
                     <td>For workshop project usage</td>
                     <td>
-                        <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
-                        <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        <div class="buttonBox">
+                            <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
+                            <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -168,8 +165,10 @@
                     <td>Camera Canon</td>
                     <td>For workshop project usage</td>
                     <td>
-                        <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
-                        <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        <div class="buttonBox">
+                            <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
+                            <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
+                        </div>
                     </td>
                 </tr>
             </tbody>
