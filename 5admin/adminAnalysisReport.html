@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Borrow Equipment - FTMK Borrow System</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+
+        margin: 0;
+      }
+
+      header {
+        background-color: #ffcc00;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+      }
+
+      header h1 {
+        margin: 0 auto;
+        color: #000;
+        font-weight: bold;
+      }
+
+      .logo {
+        height: 80px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: row;
+        padding: 20px;
+        gap: 20px;
+        justify-content: space-between;
+      }
+      .left-panel,
+      .right-panel {
+        text-align: center;
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        width: 48%;
+        flex: 1;
+        max-width: 50%;
+      }
+      .left-panel {
+        display: flex;
+        flex-direction: column;
+      }
+      .filter-row {
+        margin-bottom: 10px;
+      }
+      select {
+        padding: 5px;
+        margin-left: 5px;
+      }
+
+      canvas {
+        background-color: #f9f9f9;
+        padding: 10px;
+      }
+
+      .most-borrowed {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+      .most-borrowed span {
+        font-weight: normal;
+      }
+
+      #table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      #table th,
+      table td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: center;
+      }
+      #table th {
+        background-color: #333;
+        color: white;
+      }
+      tbody tr {
+        height: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="../0images/ftmkLogo_Yellow.png" alt="FTWK Logo" class="logo" />
+      <h1>Analysis & Report</h1>
+    </header>
+    <div class="container">
+      <div class="left-panel">
+        <h2>Equipment Usage</h2>
+
+        <div class="filter-row">
+          Filter:
+          <select>
+            <option value="All">All</option>
+            <option value="Student">Student</option>
+            <option value="Lecturer">Lecturer</option>
+            <option value="Company Repair">Company Repair</option>
+          </select>
+        </div>
+        <canvas id="usageChart" width="400" height="200"></canvas>
+        <div class="filter-row">
+          Year:
+          <select>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+          </select>
+          Month:
+          <select>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+          </select>
+        </div>
+        <div class="most-borrowed">
+          Most Borrowed Equipment: <br />
+          <span>Video Camera</span>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <h2>Overdue List</h2>
+        <div class="filter-row">
+          Filter:
+          <select>
+            <option value="All">All</option>
+            <option value="Student">Student</option>
+            <option value="Lecturer">Lecturer</option>
+            <option value="Company Repair">Company Repair</option>
+          </select>
+        </div>
+        <table id="table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>User ID</th>
+              <th>Equipment ID</th>
+              <th>Due Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const ctx = document.getElementById("usageChart").getContext("2d");
+      const usageChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Camera", "Video Cam", "Mic", "Flash"],
+          datasets: [
+            {
+              label: "Usage Count",
+              data: [10, 16, 5, 10],
+              backgroundColor: "lightblue",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
