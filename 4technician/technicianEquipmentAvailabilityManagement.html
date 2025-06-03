@@ -48,7 +48,7 @@
         }
 
 
-        .buttonStatusStyle{
+        .buttonStatus{
             height: 30px;
             width: 100px;
             background-color: #ffcc00;
@@ -83,7 +83,7 @@
         #filterBox{
             display: flex;
             float: right;
-            width: 20%;
+            width: 25%;
         }
 
         #filterEquipment::after {
@@ -121,8 +121,8 @@
                             <td>
                                 <select id="filter" style="width: 100%;">
                                     <option value="all">All</option>
-                                    <option value="lecturer">Lecturer</option>
-                                    <option value="student">Student</option>
+                                    <option value="available">Available</option>
+                                    <option value="not available">Not Available</option>
                                 </select>
                             </td>
                         </tr>
@@ -146,35 +146,35 @@
             <tbody>
                 <tr>
                     <td>1</td>
-                    <td>C0001</td>
+                    <td>C001</td>
                     <td>Camera Canon</td>
-                    <td>Student</td>
-                    <td>For workshop project usage</td>
+                    <td>EOS 200D</td>
+                    <td>DSLR camera suitable for photography and videography</td>
                     <td>
                         <h3 style="margin: 5px;">Available</h3>
-                        <button class="buttonStatusStyle">Change Status</button>
+                        <button class="buttonStatus">Change Status</button>
                     </td>
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>C0002</td>
-                    <td>Camera Canon</td>
-                    <td>Lecturer</td>
-                    <td>For workshop project usage</td>
+                    <td>L002</td>
+                    <td>Laptop HP</td>
+                    <td>Pavilion 14</td>
+                    <td>Lightweight laptop for academic and office use</td>
                     <td>
                         <h3 style="margin: 5px;">Not Available</h3>
-                        <button class="buttonStatusStyle">Change Status</button>
+                        <button class="buttonStatus">Change Status</button>
                     </td>
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>C0003</td>
-                    <td>Camera Canon</td>
-                    <td>Student</td>
-                    <td>For workshop project usage</td>
+                    <td>P003</td>
+                    <td>Projector BenQ</td>
+                    <td>MS535A</td>
+                    <td>High-brightness projector for lecture halls</td>
                     <td>
                         <h3 style="margin: 5px;">Available</h3>
-                        <button class="buttonStatusStyle">Change Status</button>
+                        <button class="buttonStatus">Change Status</button>
                     </td>
                 </tr>
             </tbody>
@@ -184,7 +184,7 @@
     <script>
         $(document).ready(function () 
         {
-
+            coloring();
             $("#filter").change(function () 
             { 
                 var filterValue = $(this).val();
@@ -192,39 +192,130 @@
                 var tbody = document.querySelector("section table tbody");
                 var rows = Array.from(tbody.querySelectorAll("tr"));
 
-                if (filterValue == "lecturer"){
-                    rows.forEach(element => {
-                        if (element.cells[2].textContent == "Lecturer"){
+                var searchValue = $("#searchInput").val();
+                searchValue = searchValue.trim();
+
+                if (searchValue === "")
+                {
+                    if (filterValue == "available"){
+                        rows.forEach(element => {
+                            let statusText = element.cells[5].querySelector("h3").textContent;
+                            if (statusText == "Available"){
+                                $(element).show();
+                            }
+                            else {
+                                $(element).hide();
+                            }
+                        })
+                    }
+                    else if (filterValue == "not available"){
+                        rows.forEach(element => {
+                            let statusText = element.cells[5].querySelector("h3").textContent;
+                            if (statusText == "Not Available"){
+                                $(element).show();
+                            }
+                            else {
+                                $(element).hide();
+                            }
+                        })
+                    }
+                    else {
+                        rows.forEach(element => {
                             $(element).show();
-                        }
-                        else {
-                            $(element).hide();
-                        }
-                    })
+                        })
+                    }
                 }
-                else if (filterValue == "student"){
-                    rows.forEach(element => {
-                        if (element.cells[2].textContent == "Student"){
+                else
+                {
+                    if (filterValue == "available"){
+                        rows.forEach(element => {
+                            let statusText = element.cells[5].querySelector("h3").textContent;
+                            if (statusText == "Available" && element.cells[1].textContent.includes(searchValue)){
+                                $(element).show();
+                            }
+                            else if (statusText == "Available" && element.cells[2].textContent.includes(searchValue)){
+                                $(element).show();
+                            }
+                            else {
+                                $(element).hide();
+                            }
+                        })
+                    }
+                    else if (filterValue == "not available"){
+                        rows.forEach(element => {
+                            let statusText = element.cells[5].querySelector("h3").textContent;
+                            if (statusText == "Not Available" && element.cells[1].textContent.includes(searchValue)){
+                                $(element).show();
+                            }
+                            else if (statusText == "Not Available" && element.cells[2].textContent.includes(searchValue)){
+                                $(element).show();
+                            }
+                            else {
+                                $(element).hide();
+                            }
+                        })
+                    }
+                    else {
+                        rows.forEach(element => {
                             $(element).show();
-                        }
-                        else {
-                            $(element).hide();
-                        }
-                    })
-                }
-                else {
-                    rows.forEach(element => {
-                        $(element).show();
-                    })
+                        })
+                    }
                 }
                 numbering();
             });
+
+            $(".buttonStatus").click(function () 
+            { 
+                let rows = $(this).closest("tr")[0];
+                let equipmentName = rows.cells[2].textContent;
+                let modelName = rows.cells[3].textContent;
+
+                if (rows.cells[5].querySelector("h3").textContent == "Available")
+                {
+                    let Confirm = window.confirm("Are you sure you want to set " + equipmentName + ' ' + modelName + " to NOT Available ?");
+
+                    if (Confirm)
+                    {
+                        rows.cells[5].querySelector("h3").textContent = "Not Available";
+                    }
+                }
+                else
+                {
+                    let Confirm = window.confirm("Are you sure you want to set " + equipmentName + ' ' + modelName + " to AVAILABLE ?");
+
+                    if (Confirm)
+                    {
+                        rows.cells[5].querySelector("h3").textContent = "Available";
+                    }
+                }
+                coloring();
+            })
 
             $("#searchInput").keydown(function (event) 
             { 
                 if (event.key === "Enter")
                 {
-                    
+                    event.preventDefault();
+
+                    let inputText = $(this).val();
+
+                    var tbody = document.querySelector("section table tbody");
+                    var rows = Array.from(tbody.querySelectorAll("tr"));
+
+                    rows.forEach(element => {
+                        if (element.cells[1].textContent.startsWith(inputText))
+                        {
+                            $(element).show();
+                        }
+                        else if (element.cells[2].textContent.startsWith(inputText))
+                        {
+                            $(element).show();
+                        }
+                        else{
+                            $(element).hide();
+                        }
+                    })
+                    numbering();
                 }
             })
         });
@@ -247,11 +338,33 @@
             var tbody = document.querySelector("section table tbody");
             var rows = Array.from(tbody.querySelectorAll("tr"));
 
-            var counter = 1;
             rows.forEach(element => {
-                if (element.cells[5].textContent == "Available") {
-                    element.cells[5].style.color = green;
-                    counter += 1;
+                if (element.cells[5].querySelector("h3").textContent == "Available") 
+                {
+                    element.cells[5].querySelector("h3").style.color = "#58FF05";
+                }
+                else
+                {
+                    element.cells[5].querySelector("h3").style.color = "red";
+                }
+            });
+        };
+
+        function checkNameOrId(x) {
+            var tbody = document.querySelector("section table tbody");
+            var rows = Array.from(tbody.querySelectorAll("tr"));
+
+            rows.forEach(element => {
+                if (element.cells[1].textContent.startsWith(x))
+                {
+                    return true
+                }
+                else if (element.cells[2].textContent.startsWith(x))
+                {
+                    return true
+                }
+                else{
+                    return false
                 }
             });
         }
