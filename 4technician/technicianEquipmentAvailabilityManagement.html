@@ -4,6 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Availability Management - FTMK Borrow System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        table{
+            width: 80%;
+        }
+        header{
+            background-color: #ffcc00;
+        }
+
+        section{
+            clear: both;
+            margin-top: 10px;
+        }
+
+        section table{
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        section table th, section table td{
+            text-align: center;
+        }
+
+        section th{
+            background-color: rgb(53, 52, 52);;;
+            color: white;
+        }
+
+        section table, section th, section td{
+            border: 1.5px solid black;
+            border-collapse: collapse;
+        }
+
+        section tr{
+            height: 50px;
+        }
+
+        section td{
+            text-align: center;
+            vertical-align: middle;
+        }
+
+
+        .buttonStatusStyle{
+            height: 30px;
+            width: 100px;
+            background-color: #ffcc00;
+            text-align: center;
+            padding: 0;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+
+        .buttonBox{
+            display: flex;
+        }
+
+        #filterEquipment{
+            width: 80%;
+            margin: 20px;
+            justify-content: space-between;
+        }
+
+        #filterEquipment table{
+            border-spacing: 0;
+        }
+
+        #searchBox{
+            display: flex;
+            float: left;
+            flex-direction: row;
+            width: 70%;
+            align-items: center;
+        }
+
+        #filterBox{
+            display: flex;
+            float: right;
+            width: 20%;
+        }
+
+        #filterEquipment::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+    </style>
 </head>
 <body>
     <header>
@@ -21,7 +110,7 @@
             <form id="filterForm">
                 <div id="searchBox">
                     <h3 style="margin-right: 10px;">Search</h3>
-                    <input type="text" id="searchInput" style="width: 100%; ">
+                    <input type="text" id="searchInput" style="width: 100%; " placeholder="Equipment ID / Equipment Name">
                 </div>
                 <div id="filterBox">
                     <table>
@@ -47,51 +136,45 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Borrower's Name</th>
-                    <th>Role</th>
+                    <th>Equipment ID</th>
                     <th>Equipment Name</th>
-                    <th>Reason</th>
-                    <th>Approval</th>
+                    <th>Model Number</th>
+                    <th>Description</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>1</td>
-                    <td>CCK</td>
-                    <td>Student</td>
+                    <td>C0001</td>
                     <td>Camera Canon</td>
+                    <td>Student</td>
                     <td>For workshop project usage</td>
                     <td>
-                        <div class="buttonBox">
-                            <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
-                            <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
-                        </div>
+                        <h3 style="margin: 5px;">Available</h3>
+                        <button class="buttonStatusStyle">Change Status</button>
                     </td>
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>CCK</td>
-                    <td>Lecturer</td>
+                    <td>C0002</td>
                     <td>Camera Canon</td>
+                    <td>Lecturer</td>
                     <td>For workshop project usage</td>
                     <td>
-                        <div class="buttonBox">
-                            <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
-                            <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
-                        </div>
+                        <h3 style="margin: 5px;">Not Available</h3>
+                        <button class="buttonStatusStyle">Change Status</button>
                     </td>
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>cck</td>
-                    <td>Student</td>
+                    <td>C0003</td>
                     <td>Camera Canon</td>
+                    <td>Student</td>
                     <td>For workshop project usage</td>
                     <td>
-                        <div class="buttonBox">
-                            <button class="buttonStyle"><i class="fa fa-check iconStyle tick"></i></button>
-                            <button class="buttonStyle"><i class="fa fa-times iconStyle cross"></i></button>
-                        </div>
+                        <h3 style="margin: 5px;">Available</h3>
+                        <button class="buttonStatusStyle">Change Status</button>
                     </td>
                 </tr>
             </tbody>
@@ -101,26 +184,6 @@
     <script>
         $(document).ready(function () 
         {
-            $(".tick").click(function() {
-                var Confirm = window.confirm("Are you sure you want to APPROVE CCK borrow application ?");
-
-                if(Confirm)
-                {
-                    $(this).closest("tr").remove();
-                    numbering();
-                }
-            });
-
-            $(".cross").click(function () 
-            {
-                var Confirm = window.confirm("Are you sure you want to REJECT CCK borrow application ?");
-            
-                if(Confirm)
-                {
-                    $(this).closest("tr").remove();
-                    numbering();
-                }
-            });
 
             $("#filter").change(function () 
             { 
@@ -175,6 +238,19 @@
             rows.forEach(element => {
                 if ($(element).is(":visible")) {
                     element.cells[0].textContent = counter;
+                    counter += 1;
+                }
+            });
+        }
+
+        function coloring(){
+            var tbody = document.querySelector("section table tbody");
+            var rows = Array.from(tbody.querySelectorAll("tr"));
+
+            var counter = 1;
+            rows.forEach(element => {
+                if (element.cells[5].textContent == "Available") {
+                    element.cells[5].style.color = green;
                     counter += 1;
                 }
             });
