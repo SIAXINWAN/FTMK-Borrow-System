@@ -263,8 +263,17 @@
                     })
                 }
                 numbering();
+            });
+
+            $("#searchInput").keydown(function (event) 
+            { 
+                if (event.key === "Enter")
+                {
+                    
+                }
             })
         });
+
 
         function numbering(){
             var tbody = document.querySelector("section table tbody");
