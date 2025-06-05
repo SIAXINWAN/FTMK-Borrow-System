@@ -5,24 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borrow Equipment - FTMK Borrow System</title>
     <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
       margin: 0;
     }
 
     .header {
-      background: #ffcc00;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      color: black;
+      background-color: #ffcc00;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
     }
 
-    .header img {
-      height: 50px;
-      vertical-align: middle;
+    .logo {
+      height: 70px;
+      margin-right: 20px;
+    }
+
+    .header h1 {
+        flex: 1;
+        text-align: center;
+        color: #000;
+        font-weight: bold;
     }
 
     .form-container {
@@ -83,6 +91,21 @@
       margin: 0 auto 10px;
     }
 
+    .equipment-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .equipment-box input[type="number"] {
+        width: 80px;
+        padding: 6px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+    }
+
     .buttons {
       text-align: center;
     }
@@ -108,54 +131,54 @@
 <body>
 
   <div class="header">
-    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/University_Technical_Malaysia_Melaka_Logo.svg/2560px-University_Technical_Malaysia_Melaka_Logo.svg.png" alt="FTMK Logo" style="height: 40px;">
-    Intangible Asset Borrow Form
+    <a href="studentMainPage.html">
+      <img src="../0images/ftmkLogo_Yellow.png" alt="FTMK Logo" class="logo" />
+    </a>
+    <h1>Intangible Assets Borrow Form</h1>
   </div>
 
   <div class="form-container">
     <h2>Applicant’s Information</h2>
     <div class="form-section">
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" id="name" placeholder="Your name">
+    <div class="form-group">
+    
+    <label for="name">Name:</label>
+    <input type="text" id="name" placeholder="Your name">
 
-        <label for="studentNo">Student No:</label>
-        <input type="text" id="studentNo" placeholder="Value">
+    <label for="studentNo">Student No:</label>
+    <input type="text" id="studentNo" placeholder="Value">
 
-        <label for="mobile">Mobile Number:</label>
-        <input type="text" id="mobile" placeholder="Value">
-      </div>
+    <label for="mobile">Mobile Number:</label>
+    <input type="text" id="mobile" placeholder="Value">
+  </div>
 
-      <div class="form-group equipment">
-        <label>Equipment to be borrow</label>
-        <img src="0images/image-icon.png" alt="Equipment Image">
-        <strong>(Name of the Equipment)</strong><br>
-        <label for="quantity">Quantity:</label>
-        <select id="quantity">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-        </select>
-      </div>
-    </div>
-
-    <h2>Purpose of Application (Course / Workshop / Seminar)</h2>
-    <label for="purpose">Purpose of Application:</label>
-    <textarea id="purpose" rows="3" placeholder="Enter your purpose"></textarea>
-
-    <label for="date">Date and time of Activity:</label>
-    <input type="datetime-local" id="date">
-
-    <div class="buttons">
-      <button class="submit-btn" onclick="handleSubmit()">Submit</button>
-      <button class="clear-btn" onclick="handleClear()">Clear</button>
+  <div class="form-group equipment">
+    <label style="font-weight: bold;">Equipment to be borrow</label>
+    <div class="equipment-box">
+      <img src="../0images/image-icon.png" alt="Equipment Image">
+      <div style="margin-top: 10px; font-weight: bold;">(Name of the Equipment)</div>
+      <label for="quantity" style="margin-top: 10px;">Quantity:</label>
+      <input type="number" id="quantity" name="quantity" min="1" value="1">
     </div>
   </div>
+</div> 
+
+<h2>Purpose of Application (Course / Workshop / Seminar)</h2>
+
+<label for="purpose">Purpose of Application:</label>
+<textarea id="purpose" rows="3" placeholder="Enter your purpose"></textarea>
+
+<label for="date">Date and time of Activity:</label>
+<input type="datetime-local" id="date">
+
+<div class="buttons">
+  <button class="submit-btn" onclick="handleSubmit()">Submit</button>
+  <button class="clear-btn" onclick="handleClear()">Clear</button>
+</div>
 
   <script>
     function handleSubmit() {
       alert("Form submitted!");
-      // Add real submission logic here
     }
 
     function handleClear() {
