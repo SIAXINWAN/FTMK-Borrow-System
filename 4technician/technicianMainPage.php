@@ -24,7 +24,7 @@
         <div class="header-bar">
             
           <div class="profile">
-            <a href="../profilePage.html">
+            <a href="../profilePage.php">
             <img
               src="../0images/user-icon.png"
               alt="User Icon"
@@ -33,28 +33,40 @@
             Profile </a>
           
           <div>
-            <a href="../loginPage.html">
+            <a href="../logout.php">
                 <img src="../0images/logout-icon.png" alt="Logout" class="input-icon">
                 Log Out</a>
           </div>
           </div>
         </div>
-    
     </header>
 
     <main>
       <h1>FTMK Borrow System</h1>
       <div class="buttons">
-        <a
-          href="securityOfficeBorrowApplicationConfirmation.html"
-          class="button"
-        >
-          <i class="fas fa-file-invoice"></i>
-          <span>Borrow Application Confirmation</span>
+        <a href="technicianEquipmentIssuance&Return.html" class="button">
+          <i class="fas fa-exchange-alt"></i>
+          <span>Equipment Issuance & Return</span>
         </a>
-        <a href="securityOfficeBorrowHistory.html" class="button">
+        <a href="technicianEquipmentAvailabilityManagement.html" class="button">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Equipment Availability Management</span>
+        </a>
+        <a href="technicianEquipmentAddition.html" class="button">
+          <i class="fas fa-plus-circle"></i>
+          <span>Equipment Addition</span>
+        </a>
+        <a href="technicianServiceHistory.html" class="button">
           <i class="fas fa-history"></i>
-          <span>Borrow History</span>
+          <span>Service History</span>
+        </a>
+        <a href="technicianServiceRequest.html" class="button">
+          <i class="fas fa-tools"></i>
+          <span>Service Request</span>
+        </a>
+        <a href="technicianCheckingRepair&ServiceStatus.html" class="button">
+          <i class="fas fa-spinner"></i>
+          <span>Checking Repair & Service Status</span>
         </a>
       </div>
     </main>

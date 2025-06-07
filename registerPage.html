@@ -78,7 +78,7 @@
       }
       .submit-btn {
         display: block;
-        margin: 30px auto 0 auto;
+        margin: 20px auto 0 auto;
         width: 200px;
         height: 50px;
         background-color: #e6b800;
@@ -126,7 +126,7 @@
     <h2>
       <center>Create your FTMK Borrow System Account</center>
     </h2>
-    <form action="" method="post" class="register-form">
+    <form action="users.php" method="post" class="register-form">
       <div class="input-grid">
         <div style="display: flex; flex-direction: column">
           <input type="text" placeholder="Name:" name="name" required />
@@ -135,7 +135,7 @@
           <input type="text" placeholder="Email:" name="email" required />
           <div class="error-text" id="emailError"></div>
         </div>
-        <input type="number" placeholder="Age:" name="age" required min="1" />
+        <input type="text" placeholder="ID:" name="matricNo" required />
         <input type="text" placeholder="Phone:" name="phone" required />
       </div>
       <div class="radio-row">
@@ -147,6 +147,7 @@
           ><input type="radio" name="role" value="Lecturer" /> Lecturer</label
         >
       </div>
+
       <div class="password-grid">
         <div style="display: flex; flex-direction: column">
           <input
@@ -159,9 +160,6 @@
         </div>
       </div>
 
-      <div class="password-note">
-        Use 8 or more characters with a mix of letters, member & symbols
-      </div>
       <div class="password-grid">
         <div style="display: flex; flex-direction: column">
           <input
@@ -176,59 +174,7 @@
       <button type="submit" class="submit-btn">Create Account</button>
     </form>
     <p class="link">
-      Already have account? <a href="loginPage.html">Sign In </a>
+      Already have account? <a href="loginPage.php">Sign In </a>
     </p>
-
-    <h2>Output</h2>
-    <p>
-      <input type="text" id="resultName" readonly disabled />
-      <input type="text" id="resultEmail" readonly disabled />
-      <input type="text" id="resultAge" readonly disabled />
-      <input type="text" id="resultPhone" readonly disabled />
-      <input type="text" id="resultRole" readonly disabled />
-    </p>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        document
-          .getElementsByClassName("register-form")[0]
-          .addEventListener("submit", function (event) {
-            event.preventDefault();
-            const name = document.getElementsByName("name")[0].value;
-            const email = document.getElementsByName("email")[0].value;
-            const age = document.getElementsByName("age")[0].value;
-            const phone = document.getElementsByName("phone")[0].value;
-            const role = document.querySelector(
-              'input[name="role"]:checked'
-            ).value;
-            const password = document.getElementsByName("password")[0].value;
-            const confirm = document.getElementsByName("confirm")[0].value;
-
-            const emailError = document.getElementById("emailError");
-            const passwordError = document.getElementById("passwordError");
-            const confirmError = document.getElementById("confirmError");
-
-            emailError.innerText = "";
-            passwordError.innerText = "";
-            confirmError.innerText = "";
-
-            if (!email.includes("@")) {
-              emailError.innerText = "Email must contain '@'";
-              return;
-            }
-
-            if (confirm !== password) {
-              confirmError.innerText = "Passwords do not match";
-              return;
-            }
-
-            document.getElementById("resultName").value = name;
-            document.getElementById("resultEmail").value = email;
-            document.getElementById("resultAge").value = age;
-            document.getElementById("resultPhone").value = phone;
-            document.getElementById("resultRole").value = role;
-          });
-      });
-    </script>
   </body>
 </html>

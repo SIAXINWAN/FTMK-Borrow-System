@@ -14,11 +14,11 @@
         <div class="header-top">
             <img src="../0images/ftmk-logo.png" alt="FTMK Logo" class="logo">
         </div>
-      
+        
         <div class="header-bar">
             
           <div class="profile">
-            <a href="../profilePage.html">
+            <a href="../profilePage.php">
             <img
               src="../0images/user-icon.png"
               alt="User Icon"
@@ -27,7 +27,7 @@
             Profile </a>
           
           <div>
-            <a href="../loginPage.html">
+            <a href="../logout.php">
                 <img src="../0images/logout-icon.png" alt="Logout" class="input-icon">
                 Log Out</a>
           </div>
@@ -38,37 +38,13 @@
     <main>
         <h1>FTMK Borrow System</h1>
         <div class="buttons">
-            <a href="adminBorrowApplicationApproval.html" class="button">
-                <i class="fas fa-check-circle"></i>
-                <span>Borrow Application Approval</span>
+            <a href="companyRepairServiceRequestList.html" class="button">
+                <i class="fas fa-file-lines"></i>
+                <span>Service Request List</span>
             </a>
-            <a href="adminServiceRequestApproval.html" class="button">
-                <i class="fas fa-tools"></i>
-                <span>Service Request Approval</span>
-            </a>
-            <a href="adminEquipmentAvailabilityManagement.html" class="button">
-                <i class="fas fa-clipboard-list"></i>
-                <span>Equipment Availability Management</span>
-            </a>
-            <a href="adminEquipmentAddition.html" class="button">
-                <i class="fas fa-plus-circle"></i>
-                <span>Equipment Addition</span>
-            </a>
-            <a href="adminEquipmentInventory.html" class="button">
-                <i class="fas fa-boxes"></i>
-                <span>Equipment Inventory</span>
-            </a>
-            <a href="adminAnalysisReport.html" class="button">
-                <i class="fas fa-chart-line"></i>
-                <span>Analysis & Report</span>
-            </a>
-            <a href="adminServiceHistory.html" class="button">
-                <i class="fas fa-history"></i>
+            <a href="companyRepairServiceHistory.html" class="button">
+                <i class="fas fa-list"></i>
                 <span>Service History</span>
-            </a>
-            <a href="adminCheckingRepair&ServiceStatus.html" class="button">
-                <i class="fas fa-spinner"></i>
-                <span>Checking Repair & Service Status</span>
             </a>
         </div>
     </main>
