@@ -3,11 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borrow Equipment - FTMK Borrow System</title>
+    <title>Borrow History - FTMK Borrow System</title>
+    <style>
+        * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+
+      header {
+        background-color: #ffcc00;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+      }
+
+      header h1 {
+        margin: 0 auto;
+        color: #000;
+        font-weight: bold;
+      }
+
+      .logo {
+        height: 80px;
+      }
+      
+      table {
+        width: 80%;
+        margin: auto;
+      }
+
+      .borrowTable, .borrowTable th, .borrowTable td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 15px;
+        text-align: center;
+      }
+
+      th {
+        background-color: rgb(53, 52, 52);
+        color: white;
+      }
+
+      .filterTable {
+        text-align: right;
+      }
+
+      #filter {
+        padding-top: 50px;
+        padding-bottom: 20px;
+      }
+  </style>
 </head>
 <body>
     <header>
-        <h1>This is Student Borrow History page</h1>
+     <a href="studentMainPage.php"> <img src="../0images/ftmkLogo_Yellow.png" alt="FTMK Logo" class="logo" /></a>
+      <h1>Borrow History</h1>
     </header>
+
+    <div id="filter">
+        <table id="filterTable" class="filterTable">
+            <td><label for="filter">Filter </label>
+                <select id="color" size="1">
+                    <option value="all">All</option>
+                    <option value="current">Current</option>
+                    <option value="past">Past</option>
+                </select>                            
+            </td>
+        </table>
+    </div>
+
+    <div id="borrow">
+        <table id="borrowTable" class="borrowTable">
+            <tr>
+                <th>No</th>
+                <th>Equipment ID</th>
+                <th>Equipment Name</th>
+                <th>Model Number</th>
+                <th>Borrow Date</th>
+                <th>Return Date</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>001</td>
+                <td>Sony Camera</td>
+                <td>FX001</td>
+                <td>2/3/2025</td>
+                <td>12/2/2025</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>002</td>
+                <td>Sony Camera</td>
+                <td>FX001</td>
+                <td>2/2/2025</td>
+                <td>7/2/2025</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>003</td>
+                <td>Sony Camera</td>
+                <td>FX001</td>
+                <td>12/1/2025</td>
+                <td>25/1/2025</td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>
