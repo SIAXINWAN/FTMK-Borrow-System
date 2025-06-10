@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Status - FTMK Borrow System</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+
+    .header {
+      background-color: #ffcc00;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      height: 70px;
+      margin-right: 20px;
+    }
+
+    .header h1 {
+      flex: 1;
+      text-align: center;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .container {
+      background-color: white;
+      width: 70%;
+      margin: 40px auto;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .info label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    .equipment-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .equipment-table th,
+    .equipment-table td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .status {
+      margin: 30px 0;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .status-label {
+      width: 180px;
+    }
+
+    .condition {
+      padding: 5px 15px;
+      color: black;
+      border-radius: 4px;
+      font-weight: bold;
+      min-width: 100px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .acceptance {
+      background-color: limegreen;
+    }
+
+    .pickup {
+      background-color: deepskyblue;
+    }
+
+    .service {
+      background-color: mediumorchid;
+    }
+
+    .incomplete {
+      background-color: mediumorchid;
+      margin-left: 20px;
+    }
+
+    .date-picker {
+      margin-left: 20px;
+      padding: 5px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .text {
+      color: black;
+      font-size: 18px;
+      margin: 10px 0 5px;
+    }
+
+    .pickup-box {
+      border: 1px solid #000;
+      padding: 15px;
+    }
+
+    .note-box {
+      border: 1px solid #000;
+      padding: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="companyRepairMainPage.php">
+      <img src="../0images/ftmkLogo_Yellow.png" alt="FTMK Logo" class="logo" />
+    </a>
+    <h1>Service Status</h1>
+  </div>
+
+  <div class="container">
+    <div class="info">
+      <label>Equipment Details:</label>
+    </div>
+
+    <table class="equipment-table">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+
+    <div class="status">
+      <div class="status-item">
+        <div class="status-label">Service Request Acceptance</div>
+        <div class="condition acceptance">Confirm</div>
+        <input type="datetime-local" class="date-picker">
+      </div>
+      <div class="status-item">
+        <div class="status-label">Pickup Equipment</div>
+        <div class="condition pickup">Done</div>
+      </div>
+      <div class="status-item">
+        <div class="status-label">Equipment Service & Repair Status</div>
+        <div class="condition service">Done</div>
+        <div class="condition incomplete">Incomplete</div>
+      </div>
+    </div>
+
+    <div class="text">Notes: </div>
+    <div class="note-box">
+    </div>
+
+    <div class="text">Return Equipment: </div>
+    <table class="equipment-table">
+      <tr>
+        <td>Company Repair</td>
+        <th><div class="condition service">Done</div></th>
+      </tr>
+      <tr>
+        <td>FTMK</td>
+        <td><div class="condition service">Received</div></td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
