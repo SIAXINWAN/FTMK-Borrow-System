@@ -58,8 +58,7 @@ if (isset($_SESSION['UserID'])) {
                 type="password"
                 id="password"
                 name="password"
-                required
-                placeholder="1234" />
+                required />
             </div>
           </div>
 
