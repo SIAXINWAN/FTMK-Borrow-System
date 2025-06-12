@@ -66,7 +66,7 @@ if (isset($_SESSION['UserID'])) {
         </form>
 
         <p id="link">
-          Don't have an account? <a href="registerPage.html">Register</a>
+          Don't have an account? <a href="registerPage.php">Register</a>
         </p>
       </div>
     </div>
