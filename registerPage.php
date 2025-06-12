@@ -233,7 +233,7 @@
               document.body.innerHTML = `
             <div style="text-align: center; padding-top: 100px;">
               <img src="0images/sad.png" alt="sad" width="150" />
-              <h2>You are not a registered FTMK student/lecturer.</h2>
+              <h2>Sorry, you are not recognized as an FTMK student or lecturer.<br> Registration is not allowed.</h2>
               <p>Redirecting to login page...</p>
             </div>
           `;

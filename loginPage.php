@@ -32,6 +32,15 @@ if (isset($_SESSION['UserID'])) {
         <h2>Fakulti Teknologi Maklumat dan Komunikasi</h2>
       </div>
 
+      <div>
+        <input type="radio" name="role" value="Student">Student
+        <input type="radio" name="role" value="Lecturer">Lecturer
+        <input type="radio" name="role" value="Admin">Admin
+        <input type="radio" name="role" value="Technician">Technician
+        <input type="radio" name="role" value="Company">Company Repair
+        <input type="radio" name="role" value="Security">Security Office
+      </div>
+
       <div class="login-form">
         <form id="login-form" action="login.php" method="POST">
           <div class="form-group">
@@ -71,7 +80,53 @@ if (isset($_SESSION['UserID'])) {
       </div>
     </div>
 
+    <script>
+      // Map roles to default credentials
+      const credentials = {
+        Student: {
+          userid: "D032310149",
+          password: "1234"
+        },
+        Lecturer: {
+          userid: "l1234",
+          password: "yahya1234"
+        },
+        Admin: {
+          userid: "a001",
+          password: "1234"
+        },
+        Technician: {
+          userid: "t001",
+          password: "1234"
+        },
+        Company: {
+          userid: "c001",
+          password: "1234"
+        },
+        Security: {
+          userid: "s001",
+          password: "1234"
+        }
+      };
 
+      // Get all radio buttons
+      const radios = document.querySelectorAll('input[type="radio"]');
+      const userIdInput = document.getElementById('userid');
+      const passwordInput = document.getElementById('password');
+
+      radios.forEach(radio => {
+        radio.addEventListener('click', function() {
+          const role = radio.value;
+          if (credentials[role]) {
+            userIdInput.value = credentials[role].userid;
+            passwordInput.value = credentials[role].password;
+          } else {
+            userIdInput.value = '';
+            passwordInput.value = '';
+          }
+        });
+      });
+    </script>
   </body>
 
   </html>

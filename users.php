@@ -21,7 +21,11 @@ $sql = "INSERT INTO users (UserID, Name, Email, Phone, Password, Role)
         VALUES ('$id','$nm', '$eml','$phone','$hashedPassword','$role')";
 
 if ($conn->query($sql) === TRUE) {
-    echo "New record created successfully";
+    echo "<div style='text-align: center; padding-top: 100px;'>";
+    echo " <img src='0images/happy.webp' alt='sad' width='150' />";
+    echo "<h2>New record created successfully.</h2>";
+    echo "  <p>Redirecting to login page...</p>";
+    echo "  </div>";
     echo "<meta http-equiv='refresh' content='3;URl=loginPage.php'>";
 } else {
     echo "Error: " . $conn->error;
