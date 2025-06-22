@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,40 +10,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
     <header>
         <div class="header-top">
             <img src="../0images/ftmk-logo.png" alt="FTMK Logo" class="logo">
         </div>
-        
+
         <div class="header-bar">
-            
-          <div class="profile">
-            <a href="../profilePage.php">
-            <img
-              src="../0images/user-icon.png"
-              alt="User Icon"
-              class="input-icon"
-            />
-            Profile </a>
-          
-          <div>
-            <a href="../logout.php">
-                <img src="../0images/logout-icon.png" alt="Logout" class="input-icon">
-                Log Out</a>
-          </div>
-          </div>
+
+            <div class="profile">
+                <a href="../Auth/profilePage.php">
+                    <img
+                        src="../0images/user-icon.png"
+                        alt="User Icon"
+                        class="input-icon" />
+                    Profile </a>
+
+                <div>
+                    <a href="../Auth/logout.php">
+                        <img src="../0images/logout-icon.png" alt="Logout" class="input-icon">
+                        Log Out</a>
+                </div>
+            </div>
         </div>
     </header>
 
     <main>
         <h1>FTMK Borrow System</h1>
         <div class="buttons">
-            <a href="companyRepairServiceRequestList.html" class="button">
+            <a href="companyRepairServiceRequestList.php" class="button">
                 <i class="fas fa-file-lines"></i>
                 <span>Service Request List</span>
             </a>
-            <a href="companyRepairServiceHistory.html" class="button">
+            <a href="companyRepairServiceHistory.php" class="button">
                 <i class="fas fa-list"></i>
                 <span>Service History</span>
             </a>
@@ -57,9 +58,9 @@
                     <i class="fas fa-home"></i>
                     <div class="address-text">
                         <p>Address: Faculty of Information & Communication Technology
-                        Universiti Teknikal Malaysia Melaka
-                        Hang Tuah Jaya, 76100 Durian Tunggal
-                        Melaka, Malaysia</p>
+                            Universiti Teknikal Malaysia Melaka
+                            Hang Tuah Jaya, 76100 Durian Tunggal
+                            Melaka, Malaysia</p>
                     </div>
                 </div>
                 <p><i class="fas fa-envelope"></i> Email: ftmk@utem.edu.my</p>
@@ -78,4 +79,5 @@
         </div>
     </footer>
 </body>
+
 </html>

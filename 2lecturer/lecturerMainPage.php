@@ -23,7 +23,7 @@
 
     <div class="header-bar">
       <div class="profile">
-        <a href="../profilePage.php">
+        <a href="../Auth/profilePage.php">
           <img
             src="../0images/user-icon.png"
             alt="User Icon"
@@ -32,7 +32,7 @@
         </a>
 
         <div>
-          <a href="../logout.php">
+          <a href="../Auth/logout.php">
             <img
               src="../0images/logout-icon.png"
               alt="Logout"
@@ -46,23 +46,20 @@
   <main>
     <h1>FTMK Borrow System</h1>
     <div class="buttons">
-      <a href="lecturerBorrowEquipment.html" class="button">
+      <a href="../Equipment/showEquipment.php" class="button">
         <i class="fas fa-file-alt"></i>
         <span>Borrow Equipment</span>
       </a>
-      <a href="lecturerEquipmentAvailability.html" class="button">
-        <i class="fas fa-list"></i>
-        <span>Equipment Availability</span>
-      </a>
-      <a href="lecturerApplicationStatus.html" class="button">
+
+      <a href="lecturerApplicationStatus.php" class="button">
         <i class="fas fa-sync-alt"></i>
         <span>Application Status</span>
       </a>
-      <a href="lecturerBorrowHistory.html" class="button">
+      <a href="lecturerBorrowHistory.php" class="button">
         <i class="fas fa-history"></i>
         <span>Borrow History</span>
       </a>
-      <a href="lecturerStudentApplicationApproval.html" class="button">
+      <a href="lecturerStudentApplicationApproval.php" class="button">
         <i class="fas fa-check-circle"></i>
         <span>Student Application Approval</span>
       </a>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,67 +10,72 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
     <header>
         <div class="header-top">
             <img src="../0images/ftmk-logo.png" alt="FTMK Logo" class="logo">
         </div>
-      
+
         <div class="header-bar">
-            
-          <div class="profile">
-            <a href="../profilePage.php">
-            <img
-              src="../0images/user-icon.png"
-              alt="User Icon"
-              class="input-icon"
-            />
-            Profile </a>
-          
-          <div>
-            <a href="../logout.php">
-                <img src="../0images/logout-icon.png" alt="Logout" class="input-icon">
-                Log Out</a>
-          </div>
-          </div>
+
+            <div class="profile">
+                <a href="../Auth/profilePage.php">
+                    <img
+                        src="../0images/user-icon.png"
+                        alt="User Icon"
+                        class="input-icon" />
+                    Profile </a>
+
+                <div>
+                    <a href="../Auth/logout.php">
+                        <img src="../0images/logout-icon.png" alt="Logout" class="input-icon">
+                        Log Out</a>
+                </div>
+            </div>
         </div>
     </header>
 
     <main>
         <h1>FTMK Borrow System</h1>
         <div class="buttons">
-            <a href="adminBorrowApplicationApproval.html" class="button">
+            <a href="adminBorrowApplicationApproval.php" class="button">
                 <i class="fas fa-check-circle"></i>
                 <span>Borrow Application Approval</span>
             </a>
-            <a href="adminServiceRequestApproval.html" class="button">
+            <a href="adminServiceRequestApproval.php" class="button">
                 <i class="fas fa-tools"></i>
                 <span>Service Request Approval</span>
             </a>
-            <a href="adminEquipmentAvailabilityManagement.html" class="button">
-                <i class="fas fa-clipboard-list"></i>
-                <span>Equipment Availability Management</span>
-            </a>
-            <a href="adminEquipmentAddition.html" class="button">
-                <i class="fas fa-plus-circle"></i>
-                <span>Equipment Addition</span>
-            </a>
-            <a href="adminEquipmentInventory.html" class="button">
+            <a href="adminEquipmentInventory.php" class="button">
                 <i class="fas fa-boxes"></i>
                 <span>Equipment Inventory</span>
             </a>
-            <a href="adminAnalysisReport.html" class="button">
-                <i class="fas fa-chart-line"></i>
-                <span>Analysis & Report</span>
+            <a href="../Equipment/EquipmentAddition.php" class="button">
+                <i class="fas fa-plus-circle"></i>
+                <span>Equipment Addition</span>
             </a>
-            <a href="adminServiceHistory.html" class="button">
+            <a href="../Borrow/borrowHistory.php" class="button">
+                <i class="fas fa-history"></i>
+                <span>Borrow History</span>
+            </a>
+            <a href="../Service/serviceHistory.php" class="button">
                 <i class="fas fa-history"></i>
                 <span>Service History</span>
             </a>
-            <a href="adminCheckingRepair&ServiceStatus.html" class="button">
+
+            <a href="../Service/showServiceList.php" class="button">
                 <i class="fas fa-spinner"></i>
                 <span>Checking Repair & Service Status</span>
             </a>
+
+
+            <a href="adminAnalysisReport.php" class="button">
+                <i class="fas fa-chart-line"></i>
+                <span>Analysis & Report</span>
+            </a>
+
+
         </div>
     </main>
 
@@ -81,9 +87,9 @@
                     <i class="fas fa-home"></i>
                     <div class="address-text">
                         <p>Address: Faculty of Information & Communication Technology
-                        Universiti Teknikal Malaysia Melaka
-                        Hang Tuah Jaya, 76100 Durian Tunggal
-                        Melaka, Malaysia</p>
+                            Universiti Teknikal Malaysia Melaka
+                            Hang Tuah Jaya, 76100 Durian Tunggal
+                            Melaka, Malaysia</p>
                     </div>
                 </div>
                 <p><i class="fas fa-envelope"></i> Email: ftmk@utem.edu.my</p>
@@ -102,4 +108,5 @@
         </div>
     </footer>
 </body>
+
 </html>

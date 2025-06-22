@@ -1,0 +1,218 @@
+<?php
+session_start();
+include("../connect.php");
+
+$stmt = $conn->prepare("SELECT 
+            sa.*, sl.Description,
+            tech.Name AS TechnicianName, 
+            comp.Name AS CompanyName, 
+            e.EquipmentName 
+        FROM service_approval sa
+        JOIN servicelog sl ON sa.ServiceID = sl.ServiceID
+        JOIN equipment e ON sl.EquipmentID = e.EquipmentID
+        JOIN users comp ON sl.CompanyID = comp.UserID
+        JOIN users tech ON sl.RequesterID = tech.UserID
+        WHERE sa.Decision = 'Pending'");
+
+$stmt->execute();
+$result = $stmt->get_result();
+
+$no = 1;
+
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Request Approval - FTMK Borrow System</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <style>
+    table {
+      width: 80%;
+    }
+
+    header {
+      background-color: #ffcc00;
+    }
+
+    section table {
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 100px;
+    }
+
+    section table th,
+    section table td {
+      text-align: center;
+    }
+
+    section th {
+      background-color: rgb(53, 52, 52);
+      color: white;
+    }
+
+    section table,
+    section th,
+    section td {
+      border: 1.5px solid black;
+      border-collapse: collapse;
+    }
+
+    section tr {
+      height: 50px;
+    }
+
+    section td {
+      text-align: center;
+      vertical-align: middle;
+      padding: 10px;
+    }
+
+    .iconStyle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      width: 30px;
+      height: 30px;
+    }
+
+    .tick {
+      background-color: greenyellow;
+    }
+
+    .cross {
+      background-color: red;
+    }
+
+    .buttonStyle {
+      height: 50px;
+      width: 50px;
+      background-color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0 auto;
+    }
+
+    .buttonBox {
+      display: flex;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <table>
+      <tr>
+        <td>
+          <a href="adminMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" width="" height="80px" /></a>
+        </td>
+        <td>
+          <h1 style="text-align: center">Service Request Approval</h1>
+        </td>
+      </tr>
+    </table>
+  </header>
+  <section>
+    <table cellspacing="0">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Equipment Name</th>
+          <th>Technician Name</th>
+          <th>Company's Name</th>
+          <th>Service Reason</th>
+          <th>Approval</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        while ($row = $result->fetch_assoc()) {
+          echo "<tr>";
+          echo "<td>" . $no++ . "</td>";
+          echo "<td>" . htmlspecialchars($row['EquipmentName']) . "</td>";
+          echo "<td>" . htmlspecialchars($row['TechnicianName']) . "</td>";
+          echo "<td>" . htmlspecialchars($row['CompanyName']) . "</td>";
+          echo "<td>" . htmlspecialchars($row['Description']) . "</td>";
+          echo "<td>
+  <div class='buttonBox'>
+    <button class='buttonStyle approveBtn' data-approval-id='{$row['ApprovalID']}'>
+      <i class='fa fa-check iconStyle tick'></i>
+    </button>
+    <button class='buttonStyle rejectBtn' data-approval-id='{$row['ApprovalID']}'>
+      <i class='fa fa-times iconStyle cross'></i>
+    </button>
+  </div>
+</td>";
+
+
+          echo "</tr>";
+        }
+
+        ?>
+
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    $(document).ready(function() {
+      const approverId = "<?php echo $_SESSION['UserID']; ?>";
+
+      $(".approveBtn").click(function() {
+        const approvalId = $(this).data("approval-id");
+
+        if (confirm("Are you sure you want to APPROVE this service request?")) {
+          $.post("processApproval.php", {
+            approvalId: approvalId,
+            decision: "Approved",
+            approverId: approverId
+          }, function(response) {
+            if (response === "success") {
+              alert("Approved successfully.");
+              location.reload();
+            } else {
+              alert("Failed to approve.");
+            }
+          });
+        }
+      });
+
+      $(".rejectBtn").click(function() {
+        const approvalId = $(this).data("approval-id");
+
+        const remarks = prompt("Please provide a reason for REJECTION:");
+        if (remarks !== null && remarks.trim() !== "") {
+          $.post("processApproval.php", {
+            approvalId: approvalId,
+            decision: "Rejected",
+            approverId: approverId,
+            remarks: remarks
+          }, function(response) {
+            if (response === "success") {
+              alert("Rejected successfully.");
+              location.reload();
+            } else {
+              alert("Failed to reject.");
+            }
+          });
+        } else {
+          alert("Rejection cancelled. Remarks are required.");
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>

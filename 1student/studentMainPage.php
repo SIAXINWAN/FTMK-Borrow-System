@@ -23,7 +23,7 @@
     </div>
     <div class="header-bar">
       <div class="profile">
-        <a href="../profilePage.php">
+        <a href="../Auth/profilePage.php">
           <img
             src="../0images/user-icon.png"
             alt="User Icon"
@@ -31,7 +31,7 @@
           Profile
         </a>
         <div>
-          <a href="../logout.php">
+          <a href="../Auth/logout.php">
             <img
               src="../0images/logout-icon.png"
               alt="Logout"
@@ -45,19 +45,16 @@
   <main>
     <h1>FTMK Borrow System</h1>
     <div class="buttons">
-      <a href="studentBorrowEquipment.html" class="button">
+      <a href="../Equipment/showEquipment.php" class="button">
         <i class="fas fa-file-alt"></i>
         <span>Borrow Equipment</span>
       </a>
-      <a href="studentEquipmentAvailability.html" class="button">
-        <i class="fas fa-list"></i>
-        <span>Equipment Availability</span>
-      </a>
-      <a href="studentApplicationStatus.html" class="button">
+
+      <a href="studentApplicationStatus.php" class="button">
         <i class="fas fa-sync-alt"></i>
         <span>Application Status</span>
       </a>
-      <a href="studentBorrowHistory.html" class="button">
+      <a href="studentBorrowHistory.php" class="button">
         <i class="fas fa-history"></i>
         <span>Borrow History</span>
       </a>

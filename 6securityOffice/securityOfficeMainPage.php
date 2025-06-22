@@ -24,7 +24,7 @@
     <div class="header-bar">
 
       <div class="profile">
-        <a href="../profilePage.php">
+        <a href="../Auth/profilePage.php">
           <img
             src="../0images/user-icon.png"
             alt="User Icon"
@@ -32,7 +32,7 @@
           Profile </a>
 
         <div>
-          <a href="../logout.php">
+          <a href="../Auth/logout.php">
             <img src="../0images/logout-icon.png" alt="Logout" class="input-icon">
             Log Out</a>
         </div>
@@ -45,12 +45,12 @@
     <h1>FTMK Borrow System</h1>
     <div class="buttons">
       <a
-        href="securityOfficeBorrowApplicationConfirmation.html"
+        href="securityOfficeBorrowApplicationConfirmation.php"
         class="button">
         <i class="fas fa-file-invoice"></i>
         <span>Borrow Application Confirmation</span>
       </a>
-      <a href="securityOfficeBorrowHistory.html" class="button">
+      <a href="../Borrow/borrowHistory.php" class="button">
         <i class="fas fa-history"></i>
         <span>Borrow History</span>
       </a>
