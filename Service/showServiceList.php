@@ -2,17 +2,19 @@
 
 session_start();
 include("../connect.php");
-$statusExclude = 'Completed';
+$status1 = 'Completed';
+$status2 = 'Rejected';
 
 $sql = "SELECT sl.*, e.EquipmentName, u.Name as CompanyName 
         FROM servicelog sl 
         JOIN equipment e ON sl.EquipmentID = e.EquipmentID
         JOIN users u ON sl.CompanyID = u.UserID
-        WHERE sl.Status != ?";
+        WHERE sl.Status NOT IN (?, ?)";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $statusExclude);
+$stmt->bind_param("ss", $status1, $status2);
 $stmt->execute();
+
 
 $result = $stmt->get_result();
 

@@ -181,7 +181,7 @@ $stmt->close();
     <script>
         function handleClick(equipmentId, quantity) {
             if (quantity == 0) {
-                alert("This equipment is fully borrowed and cannot be serviced.");
+                alert("This equipment is no available and cannot be serviced.");
                 return;
             }
             location.href = 'technicianServiceRequest.php?id=' + equipmentId;

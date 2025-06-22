@@ -81,11 +81,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt5->execute();
             $stmt5->close();
 
+            // 获取 reject 前的数量和 availability status
+            $stmtQty = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
+            $stmtQty->bind_param("s", $equipmentId);
+            $stmtQty->execute();
+            $qtyResult = $stmtQty->get_result();
+            $equipmentData = $qtyResult->fetch_assoc();
+            $beforeQty = (int) $equipmentData['Quantity'];
+            $currentStatus = (int) $equipmentData['AvailabilityStatus'];
+            $stmtQty->close();
+
+
+            // Add back equipment quantity
             // Add back equipment quantity
             $stmt6 = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
             $stmt6->bind_param("is", $quantity, $equipmentId);
             $stmt6->execute();
             $stmt6->close();
+
+            if ($beforeQty === 0 && $currentStatus === 0) {
+                $stmtStatus = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 1 WHERE EquipmentID = ?");
+                $stmtStatus->bind_param("s", $equipmentId);
+                $stmtStatus->execute();
+                $stmtStatus->close();
+            }
+
 
             // Send rejection email
             $subject = "Your Borrow Application Has Been Rejected";

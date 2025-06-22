@@ -53,6 +53,22 @@ if ($insertAppStmt->execute()) {
     }
     $updateQtyStmt->close();
 
+    $checkQtyStmt = $conn->prepare("SELECT Quantity FROM equipment WHERE EquipmentID = ?");
+    $checkQtyStmt->bind_param("s", $equipmentId);
+    $checkQtyStmt->execute();
+    $qtyResult = $checkQtyStmt->get_result();
+    $qtyRow = $qtyResult->fetch_assoc();
+    $checkQtyStmt->close();
+
+    if ($qtyRow && isset($qtyRow['Quantity']) && $qtyRow['Quantity'] <= 0) {
+
+        $updateStatusStmt = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 0 WHERE EquipmentID = ?");
+        $updateStatusStmt->bind_param("s", $equipmentId);
+        $updateStatusStmt->execute();
+        $updateStatusStmt->close();
+    }
+
+
 
     $approvalSuccess = true;
 
@@ -91,9 +107,8 @@ if ($insertAppStmt->execute()) {
 
     if ($approvalSuccess) {
 
-
-
         if ($role === 'Student') {
+            // 获取 lecturer 信息（从 dummy）
             $dummyStmt = $conn->prepare("SELECT Name, Email FROM dummy WHERE UserID = ?");
             $dummyStmt->bind_param("s", $lecturerId);
             $dummyStmt->execute();
@@ -103,39 +118,43 @@ if ($insertAppStmt->execute()) {
             $lecturerEmail = $dummyRow['Email'] ?? '';
             $dummyStmt->close();
 
-            $userCheckStmt = $conn->prepare("SELECT * FROM users WHERE UserID = ?");
+            // 检查 users 表中是否有设置 Password（是否注册）
+            $userCheckStmt = $conn->prepare("SELECT Password FROM users WHERE UserID = ?");
             $userCheckStmt->bind_param("s", $lecturerId);
             $userCheckStmt->execute();
             $userCheckResult = $userCheckStmt->get_result();
-            $hasAccount = $userCheckResult->num_rows > 0;
+            $userCheckRow = $userCheckResult->fetch_assoc();
+            $hasPassword = !empty($userCheckRow['Password']); // true = 已注册
             $userCheckStmt->close();
 
+            // 发 email 通知
             if ($lecturerEmail) {
-                if ($hasAccount) {
+                if ($hasPassword) {
                     $subject = "New Borrow Application From Your Student";
                     $body = "
-                        Dear $lecturerName,<br><br>
-                        You have received a new equipment borrow application from your student.<br>
-                        Please log in to the <b><a href='https://webapp.utem.edu.my/student/dit/jcats/FTMK-Borrow-System/' target='_blank'>FTMK Borrow System</a></b> as soon as possible and check your student's application.<br><br>
-                        Thank you.
-                    ";
+                    Dear $lecturerName,<br><br>
+                    You have received a new equipment borrow application from your student.<br>
+                    Please log in to the <b><a href='https://webapp.utem.edu.my/student/dit/jcats/FTMK-Borrow-System/' target='_blank'>FTMK Borrow System</a></b> as soon as possible and check your student's application.<br><br>
+                    Thank you.
+                ";
                 } else {
                     $subject = "Action Required: Register to Approve Borrow Application";
                     $body = "
-                        Dear $lecturerName,<br><br>
-                        A student has submitted a borrow application and selected you as the approving lecturer.<br><br>
-                        <b>However, our system shows that you have not yet registered for an account.</b><br><br>
-                        Please register at the <b><a href='https://webapp.utem.edu.my/student/dit/jcats/FTMK-Borrow-System/' target='_blank'>FTMK Borrow System</a></b> as soon as possible and check your student's application.<br><br>
-                        Thank you.<br><br>
-                        Best regards,<br>
-                        FTMK Borrow System<br>
-                        University Teknikal Malaysia Melaka (UTeM)<br>
-                    ";
+                    Dear $lecturerName,<br><br>
+                    A student has submitted a borrow application and selected you as the approving lecturer.<br><br>
+                    <b>However, our system shows that you have not yet registered for an account.</b><br><br>
+                    Please register at the <b><a href='https://webapp.utem.edu.my/student/dit/jcats/FTMK-Borrow-System/' target='_blank'>FTMK Borrow System</a></b> as soon as possible and check your student's application.<br><br>
+                    Thank you.<br><br>
+                    Best regards,<br>
+                    FTMK Borrow System<br>
+                    University Teknikal Malaysia Melaka (UTeM)<br>
+                ";
                 }
 
                 sendNotification($lecturerEmail, $subject, $body);
             }
         } else {
+            // Non-student (lecturer/others)，通知 admin
             $adminQuery = "SELECT Email, Name FROM users WHERE Role = 'Admin'";
             $adminResult = $conn->query($adminQuery);
             while ($adminRow = $adminResult->fetch_assoc()) {
@@ -144,18 +163,19 @@ if ($insertAppStmt->execute()) {
 
                 $subject = "New Borrow Application Pending Approval";
                 $body = "
-                    Dear $adminName,<br><br>
-                    A new borrow application has been submitted and is awaiting your approval.<br>
-                    Please log in to <b><a href='https://webapp.utem.edu.my/student/dit/jcats/FTMK-Borrow-System/' target='_blank'>FTMK Borrow System</a></b> to review and take action.<br><br>
-                    Thank you.<br><br>
-                    Best regards,<br>
-                    FTMK Borrow System<br>
-                    University Teknikal Malaysia Melaka (UTeM)<br>
-                ";
+                Dear $adminName,<br><br>
+                A new borrow application has been submitted and is awaiting your approval.<br>
+                Please log in to <b><a href='https://webapp.utem.edu.my/student/dit/jcats/FTMK-Borrow-System/' target='_blank'>FTMK Borrow System</a></b> to review and take action.<br><br>
+                Thank you.<br><br>
+                Best regards,<br>
+                FTMK Borrow System<br>
+                University Teknikal Malaysia Melaka (UTeM)<br>
+            ";
                 sendNotification($adminEmail, $subject, $body);
             }
         }
 
+        // Redirect after success
         $_SESSION['success'] = "Borrow application submitted!";
         $redirect = ($role === 'Student') ? "../1student/studentApplicationStatus.php" : "../2lecturer/lecturerApplicationStatus.php";
         header("Location: $redirect");

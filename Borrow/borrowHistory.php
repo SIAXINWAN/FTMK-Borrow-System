@@ -3,7 +3,7 @@
 session_start();
 include("../connect.php");
 
-$sql = "SELECT u.*, e.EquipmentName, e.ModelNumber, s.* 
+$sql = "SELECT u.*, e.EquipmentName, s.* 
         FROM borrow_history u 
         JOIN equipment e ON u.EquipmentID = e.EquipmentID
         JOIN users s ON u.UserId = s.UserId
@@ -123,8 +123,8 @@ $no = 1;
                 <th>Borrower Name</th>
                 <th>Borrower Role</th>
                 <th>Equipment Name</th>
-                <th>Model Number</th>
                 <th>Borrow Date</th>
+                <th>Due Date</th>
                 <th>Return Date</th>
             </tr>
             <tbody>
@@ -134,9 +134,26 @@ $no = 1;
                         <td><?php echo htmlspecialchars($row['Name']); ?></td>
                         <td><?php echo htmlspecialchars($row['Role']); ?></td>
                         <td><?php echo htmlspecialchars($row['EquipmentName']); ?></td>
-                        <td><?php echo htmlspecialchars($row['ModelNumber']); ?></td>
                         <td><?php echo $row['BorrowDate'] ? htmlspecialchars($row['BorrowDate']) : '-'; ?></td>
-                        <td><?php echo $row['ReturnDate'] ? htmlspecialchars($row['ReturnDate']) : '-'; ?></td>
+                        <td><?php echo $row['DueDate'] ? htmlspecialchars($row['DueDate']) : '-'; ?></td>
+                        <td>
+                            <?php
+                            $today = date("Y-m-d");
+                            $dueDate = $row['DueDate'];
+                            $returnDate = $row['ReturnDate'];
+
+                            if (empty($returnDate) || $returnDate === '0000-00-00') {
+                                if ($today > $dueDate) {
+                                    echo "<span style='color: red; font-weight: bold;'>Late</span>";
+                                } else {
+                                    echo "-";
+                                }
+                            } else {
+                                echo htmlspecialchars($returnDate);
+                            }
+                            ?>
+                        </td>
+
                     </tr>
                 <?php } ?>
             </tbody>
@@ -150,8 +167,8 @@ $no = 1;
             const rows = table.getElementsByTagName("tr");
 
             for (let i = 1; i < rows.length; i++) {
-                const returnDate = rows[i].cells[5].innerText.trim();
-                const isReturned = returnDate !== '-';
+                const returnDate = rows[i].cells[6].innerText.trim();
+                const isReturned = !(returnDate === '' || returnDate === '-');
 
                 if (
                     filter === "all" ||

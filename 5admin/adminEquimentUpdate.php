@@ -144,7 +144,7 @@ $row = $result->fetch_assoc();
       method="post"
       enctype="multipart/form-data">
 
-      
+
 
       <div class="form-group">
         <label>Equipment Name:</label>
@@ -178,7 +178,7 @@ $row = $result->fetch_assoc();
       </div>
       <div class="form-group">
         <label>Quantity:</label>
-        <input type="number" name="quantity" min="1" value="<?= $row['Quantity'] ?? '1' ?>" required />
+        <input type="number" name="quantity" min="0" value="<?= $row['Quantity'] ?? '1' ?>" required />
       </div>
       <div class="form-group">
         <label>Description:</label>

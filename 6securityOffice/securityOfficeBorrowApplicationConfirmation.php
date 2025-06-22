@@ -92,7 +92,7 @@ $result = $stmt->get_result();
         }
 
         .tick {
-            background-color: green;
+            background-color: greenyellow;
         }
 
         .cross {

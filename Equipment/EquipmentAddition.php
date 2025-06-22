@@ -204,6 +204,34 @@ unset($_SESSION['success'], $_SESSION['error'], $_SESSION['idError'], $_SESSION[
 
     </form>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const typeSelect = document.querySelector("select[name='type']");
+      const idInput = document.querySelector("input[name='id']");
+
+      typeSelect.addEventListener("change", function() {
+        const selectedType = this.value;
+
+        if (selectedType) {
+          fetch(`getNextEquipmentId.php?type=${encodeURIComponent(selectedType)}`)
+            .then(res => res.json())
+            .then(data => {
+              idInput.value = data.nextId;
+              idInput.readOnly = true;
+            })
+            .catch(err => {
+              console.error("Error fetching next ID:", err);
+              idInput.value = "";
+              idInput.readOnly = false;
+            });
+        } else {
+          idInput.value = "";
+          idInput.readOnly = false;
+        }
+      });
+    });
+  </script>
+
 </body>
 
 </html>

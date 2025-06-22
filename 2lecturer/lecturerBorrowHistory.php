@@ -119,7 +119,23 @@ $no = 1;
         <td><?php echo htmlspecialchars($row['ModelNumber']); ?></td>
         <td><?php echo htmlspecialchars($row['BorrowDate']); ?></td>
         <td><?php echo htmlspecialchars($row['DueDate']); ?></td>
-        <td><?php echo $row['ReturnDate'] ? htmlspecialchars($row['ReturnDate']) : '-'; ?></td>
+        <td>
+          <?php
+          $today = date("Y-m-d");
+          $dueDate = $row['DueDate'];
+          $returnDate = $row['ReturnDate'];
+
+          if (empty($returnDate) || $returnDate === '0000-00-00') {
+            if ($today > $dueDate) {
+              echo "<span style='color: red; font-weight: bold;'>Late</span>";
+            } else {
+              echo "-";
+            }
+          } else {
+            echo htmlspecialchars($returnDate);
+          }
+          ?>
+        </td>
       </tr>
     <?php } ?>
   </table>

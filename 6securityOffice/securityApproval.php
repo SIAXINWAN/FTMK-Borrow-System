@@ -60,6 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
         }
 
+
+
+
         // Update application status
         $stmt = $conn->prepare("UPDATE borrow_applications SET ApplicationStatus = 'Approved' WHERE ApplicationID = ?");
         $stmt->bind_param("i", $applicationId);
@@ -79,7 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ";
         sendNotification($userEmail, $subject, $body);
         echo "success";
-
     } else {
         // Update application as rejected
         $stmt = $conn->prepare("UPDATE borrow_applications SET ApplicationStatus = 'Rejected' WHERE ApplicationID = ?");
@@ -87,11 +89,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
         $stmt->close();
 
+        // 获取 reject 前的设备状态（在加 quantity 前）
+        $stmtBefore = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
+        $stmtBefore->bind_param("i", $equipmentId);
+        $stmtBefore->execute();
+        $beforeResult = $stmtBefore->get_result();
+        $beforeData = $beforeResult->fetch_assoc();
+        $beforeQty = (int)$beforeData['Quantity'];
+        $beforeStatus = (int)$beforeData['AvailabilityStatus'];
+        $stmtBefore->close();
+
         // Restore quantity
         $stmt = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
-        $stmt->bind_param("ii", $borrowQty, $equipmentId);
+        $stmt->bind_param("is", $borrowQty, $equipmentId);
         $stmt->execute();
         $stmt->close();
+
+
+        // ✅ 只有系统自动设为 unavailable（beforeQty == 0 且 status == 0）才恢复
+        if ($beforeQty === 0 && $beforeStatus === 0) {
+            $stmtRestore = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 1 WHERE EquipmentID = ?");
+            $stmtRestore->bind_param("i", $equipmentId);
+            $stmtRestore->execute();
+            $stmtRestore->close();
+        }
+
 
         // Notify borrower
         $subject = "Your Borrow Application Has Been Rejected";

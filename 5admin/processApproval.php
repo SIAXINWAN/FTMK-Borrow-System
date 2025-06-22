@@ -85,10 +85,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 University Teknikal Malaysia Melaka (UTeM)<br>";
                 sendNotification($companyEmail, $subjectC, $bodyC);
             } elseif ($decision === 'Rejected') {
+                // 查询 reject 前的设备数量与 status
+                $stmtCheck = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
+                $stmtCheck->bind_param("s", $equipmentId);
+                $stmtCheck->execute();
+                $checkResult = $stmtCheck->get_result();
+                $equipmentRow = $checkResult->fetch_assoc();
+                $beforeQty = (int) $equipmentRow['Quantity'];
+                $beforeStatus = (int) $equipmentRow['AvailabilityStatus'];
+                $stmtCheck->close();
+
+                // 加回设备数量
                 $stmt4 = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
                 $stmt4->bind_param("is", $equipmentQuantity, $equipmentId);
                 $stmt4->execute();
                 $stmt4->close();
+
+                // 判断是否需要恢复 status = 1
+                if ($beforeQty === 0 && $beforeStatus === 0) {
+                    $stmtRestore = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 1 WHERE EquipmentID = ?");
+                    $stmtRestore->bind_param("s", $equipmentId);
+                    $stmtRestore->execute();
+                    $stmtRestore->close();
+                }
+
 
                 // Email to technician
                 $subject = "Service Request Rejected";

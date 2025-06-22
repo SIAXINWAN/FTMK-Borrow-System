@@ -37,28 +37,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $stmt3->close();
 
-            // 4. Update equipment quantity
-            $stmt4 = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
-            $stmt4->bind_param("is", $borrowQty, $equipmentId);
-            $stmt4->execute();
-            $stmt4->close();
+            // ✅ Step 1: 查 "归还之前" 的状态
+            $stmtCheck = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
+            $stmtCheck->bind_param("s", $equipmentId);
+            $stmtCheck->execute();
+            $result = $stmtCheck->get_result();
+            $equipment = $result->fetch_assoc();
+            $beforeQty = (int)$equipment['Quantity'];
+            $beforeStatus = (int)$equipment['AvailabilityStatus'];
+            $stmtCheck->close();
 
-            // 5. Check new quantity and update availability
-            $stmt5 = $conn->prepare("SELECT Quantity FROM equipment WHERE EquipmentID = ?");
-            $stmt5->bind_param("s", $equipmentId);
-            $stmt5->execute();
-            $result5 = $stmt5->get_result();
+            // ✅ Step 2: 先加回 Quantity
+            $stmtUpdate = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
+            $stmtUpdate->bind_param("is", $borrowQty, $equipmentId);
+            $stmtUpdate->execute();
+            $stmtUpdate->close();
 
-            if ($result5 && $result5->num_rows > 0) {
-                $newQty = $result5->fetch_assoc()['Quantity'];
-                $newStatus = ($newQty > 0) ? 1 : 0;
-                $stmt5->close();
-
-                $stmt6 = $conn->prepare("UPDATE equipment SET AvailabilityStatus = ? WHERE EquipmentID = ?");
-                $stmt6->bind_param("is", $newStatus, $equipmentId);
-                $stmt6->execute();
-                $stmt6->close();
+            // ✅ Step 3: 判断是否需要恢复 status
+            if ($beforeQty === 0 && $beforeStatus === 0) {
+                $stmtStatus = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 1 WHERE EquipmentID = ?");
+                $stmtStatus->bind_param("s", $equipmentId);
+                $stmtStatus->execute();
+                $stmtStatus->close();
             }
+
+
 
             echo "success";
         } else {
@@ -70,4 +73,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $conn->close();
 }
-?>

@@ -34,10 +34,25 @@ if ($stmt->execute()) {
         $stmt3->execute();
         $stmt3->close();
 
-        $updateQty = $conn->prepare("UPDATE equipment SET Quantity = Quantity - $quantity WHERE EquipmentID = ?");
-        $updateQty->bind_param("s", $equipmentID);
+        $updateQty = $conn->prepare("UPDATE equipment SET Quantity = Quantity - ? WHERE EquipmentID = ?");
+        $updateQty->bind_param("is", $quantity, $equipmentID);
         $updateQty->execute();
         $updateQty->close();
+
+        $checkQty = $conn->prepare("SELECT Quantity FROM equipment WHERE EquipmentID = ?");
+        $checkQty->bind_param("s", $equipmentID);
+        $checkQty->execute();
+        $result = $checkQty->get_result();
+        if ($row = $result->fetch_assoc()) {
+            if ((int)$row['Quantity'] <= 0) {
+                $setUnavailable = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 0 WHERE EquipmentID = ?");
+                $setUnavailable->bind_param("s", $equipmentID);
+                $setUnavailable->execute();
+                $setUnavailable->close();
+            }
+        }
+        $checkQty->close();
+
 
         $adminResult = $conn->query("SELECT Email FROM users WHERE Role = 'Admin'");
         while ($admin = $adminResult->fetch_assoc()) {

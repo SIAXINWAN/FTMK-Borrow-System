@@ -25,6 +25,20 @@ if (isset($_SESSION['UserID'])) {
     if ($result && $result->num_rows == 1) {
         $user = $result->fetch_assoc();
 
+        // ✅ 新增：检查是否未注册（Password 是 NULL 或空字符串）
+        if (empty($user['Password'])) {
+            session_unset();
+            echo "<div style='text-align: center; padding-top: 100px;'>";
+            echo "<img src='../0images/sad.png' alt='sad' width='150' />";
+            echo "<h2>Login Failed</h2>";
+            echo "<h3>You haven't registered yet. Please register before logging in.</h3>";
+            echo "<p>Redirecting to login page...</p>";
+            echo "</div>";
+            echo "<meta http-equiv='refresh' content='3;URL=../index.php'>";
+            exit();
+        }
+
+        // ✅ 如果密码存在，验证输入
         if (password_verify($input_password, $user['Password'])) {
             $_SESSION['role'] = $user['Role'];
 
@@ -51,13 +65,23 @@ if (isset($_SESSION['UserID'])) {
             exit();
         } else {
             session_unset();
-            echo "Login Fail: Password Salah";
-            echo "<meta http-equiv='refresh' content='2;URL=../index.php'>";
+            echo "<div style='text-align: center; padding-top: 100px;'>";
+            echo "<img src='../0images/sad.png' alt='sad' width='150' />";
+            echo "<h2>Login Failed</h2>";
+            echo "<h3>Incorrect password. Please try again.</h3>";
+            echo "<p>Redirecting to login page...</p>";
+            echo "</div>";
+            echo "<meta http-equiv='refresh' content='3;URL=../index.php'>";
         }
     } else {
         session_unset();
-        echo "Login Fail: Username tidak wujud";
-        echo "<meta http-equiv='refresh' content='2;URL=../index.php'>";
+        echo "<div style='text-align: center; padding-top: 100px;'>";
+        echo "<img src='../0images/sad.png' alt='sad' width='150' />";
+        echo "<h2>Login Failed</h2>";
+        echo "<h3>User ID not found. Please check and try again.</h3>";
+        echo "<p>Redirecting to login page...</p>";
+        echo "</div>";
+        echo "<meta http-equiv='refresh' content='3;URL=../index.php'>";
     }
 
     $stmt->close();

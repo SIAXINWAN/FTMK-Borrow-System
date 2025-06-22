@@ -39,10 +39,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $quantityReturned = $row['Quantity']; // 归还数量
 
                 // 1️⃣ 更新设备数量，加回库存
+                // 1️⃣ 查询归还前的库存状态
+                $stmtCheck = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
+                $stmtCheck->bind_param("s", $equipmentID);
+                $stmtCheck->execute();
+                $checkResult = $stmtCheck->get_result();
+                $equipmentRow = $checkResult->fetch_assoc();
+                $beforeQty = (int)$equipmentRow['Quantity'];
+                $beforeStatus = (int)$equipmentRow['AvailabilityStatus'];
+                $stmtCheck->close();
+
+                // 2️⃣ 加回设备数量
                 $stmt4 = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
                 $stmt4->bind_param("is", $quantityReturned, $equipmentID);
                 $stmt4->execute();
                 $stmt4->close();
+
+                // 3️⃣ 恢复状态（如果之前是自动设为 unavailable）
+                if ($beforeQty === 0 && $beforeStatus === 0) {
+                    $stmtStatus = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 1 WHERE EquipmentID = ?");
+                    $stmtStatus->bind_param("s", $equipmentID);
+                    $stmtStatus->execute();
+                    $stmtStatus->close();
+                }
+
 
                 // 2️⃣ Email 通知
                 $subject = "Equipment Received Confirmation";

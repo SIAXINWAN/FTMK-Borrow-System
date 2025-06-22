@@ -272,8 +272,8 @@ $receivedReturn = $history['ReceivedReturn'];
 
             if ($repairDisplay === 'Completed') {
                 $repairClass = 'status-approved';
-            } elseif ($repairDisplay === 'Failed') {
-                $repairClass = 'status-failed';
+            } elseif ($repairDisplay === 'Incomplete') {
+                $repairClass = 'status-incomplete';
             } else {
                 $repairClass = 'status-pending';
             }

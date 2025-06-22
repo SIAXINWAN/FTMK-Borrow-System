@@ -83,6 +83,16 @@ $no = 1;
             padding-top: 50px;
             padding-bottom: 20px;
         }
+
+        .buttonStatus {
+            height: 30px;
+            width: 100px;
+            background-color: #ffcc00;
+            text-align: center;
+            padding: 0;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 
@@ -105,6 +115,7 @@ $no = 1;
                 <th>Model Number</th>
                 <th>Borrow Date</th>
                 <th>Return Date</th>
+                <th>Status</th>
             </tr>
             <tbody>
                 <?php
@@ -117,10 +128,11 @@ $no = 1;
                         echo "<td>" . $row['ModelNumber'] . "</td>";
                         echo "<td>" . $row['AcceptDate'] . "</td>";
                         echo "<td>" . $row['ReturnDate'] . "</td>";
+                        echo "<td><a href='../Service/checkServiceStatus.php?serviceID=" . $row['ServiceID'] . "'><button class='buttonStatus'>Check Status</button></a></td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo '<tr><td colspan="6" style="text-align: center;;">No service history found.</td></tr>';
+                    echo '<tr><td colspan="7" style="text-align: center;;">No service history found.</td></tr>';
                 }
                 ?>
             </tbody>

@@ -88,7 +88,7 @@ if (isset($_SESSION['UserID'])) {
           password: "1234"
         },
         Lecturer: {
-          userid: "L10041",
+          userid: "L10056",
           password: "1234"
         },
         Admin: {

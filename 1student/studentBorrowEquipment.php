@@ -253,9 +253,6 @@ $lresult = $stmt3->get_result();
 
       <script>
         function handleClear() {
-          document.getElementById('name').value = '';
-          document.getElementById('studentNo').value = '';
-          document.getElementById('mobile').value = '';
           document.getElementById('quantity').value = '1';
           document.getElementById('purpose').value = '';
           document.getElementById('date').value = '';

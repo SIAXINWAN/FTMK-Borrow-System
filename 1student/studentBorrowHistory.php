@@ -4,14 +4,14 @@ session_start();
 
 $userId = $_SESSION['UserID'];
 
-$stmt1 = $conn->prepare( "SELECT bh.*, e.EquipmentName, e.ModelNumber 
+$stmt1 = $conn->prepare("SELECT bh.*, e.EquipmentName, e.ModelNumber 
         FROM borrow_history bh
         JOIN equipment e ON bh.EquipmentID = e.EquipmentID
         WHERE bh.UserID = ?
         ORDER BY bh.BorrowID DESC");
-$stmt1->bind_param('s',$userId);
+$stmt1->bind_param('s', $userId);
 $stmt1->execute();
-$result= $stmt1->get_result();
+$result = $stmt1->get_result();
 
 
 
@@ -136,8 +136,23 @@ $no = 1;
           ?>
         </td>
         <td><?php echo $row['DueDate'] ? htmlspecialchars($row['DueDate']) : '-'; ?></td>
-        <td><?php echo $row['ReturnDate'] ? htmlspecialchars($row['ReturnDate']) : '-'; ?></td>
+        <td>
+          <?php
+          $today = date("Y-m-d");
+          $dueDate = $row['DueDate'];
+          $returnDate = $row['ReturnDate'];
 
+          if (empty($returnDate) || $returnDate === '0000-00-00') {
+            if ($today > $dueDate) {
+              echo "<span style='color: red; font-weight: bold;'>Late</span>";
+            } else {
+              echo "-";
+            }
+          } else {
+            echo htmlspecialchars($returnDate);
+          }
+          ?>
+        </td>
       </tr>
     <?php } ?>
   </table>
