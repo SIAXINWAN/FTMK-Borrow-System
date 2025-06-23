@@ -42,10 +42,19 @@ $row = $result->fetch_assoc();
 
     header {
       background-color: #ffcc00;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
     }
 
-    header img {
-      size: 0cap;
+    header h1 {
+      margin: 0 auto;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .logo {
+      height: 80px;
     }
 
 
@@ -126,16 +135,11 @@ $row = $result->fetch_assoc();
 
 <body>
   <header>
-    <table>
-      <tr>
-        <td>
-          <a href="adminMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" width="" height="80px" /></a>
-        </td>
-        <td>
-          <h1 style="text-align: center">Equipment Update</h1>
-        </td>
-      </tr>
-    </table>
+
+    <a href="adminMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" class="logo" /></a>
+
+    <h1 style="text-align: center">Equipment Update</h1>
+
   </header>
   <div class="container">
     <form

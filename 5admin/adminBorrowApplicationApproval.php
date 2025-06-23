@@ -1,3 +1,8 @@
+<?php
+include("../connect.php");
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,15 +13,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
-        table {
-            width: 80%;
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
         }
 
         header {
             background-color: #ffcc00;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0 auto;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .logo {
+            height: 80px;
+        }
+
+        table {
+            width: 80%;
         }
 
         section table {
+
             clear: both;
             margin-left: auto;
             margin-right: auto;
@@ -92,19 +121,60 @@
         .buttonBox {
             display: flex;
         }
+
+        /* Loading Overlay Styling */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner-container {
+            text-align: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #ffcc00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        .spinner-text {
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body>
     <header>
-        <table>
-            <tr>
-                <td><a href="adminMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" height="80px"></a></td>
-                <td>
-                    <h1 style="text-align: center;">Borrow Application Approval</h1>
-                </td>
-            </tr>
-        </table>
+        <a href="adminMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" height="80px"></a>
+
+        <h1 style="text-align: center;">Borrow Application Approval</h1>
+
     </header>
     <center>
         <form id="filterForm" method="get" action="">
@@ -139,8 +209,7 @@
             </thead>
             <tbody>
                 <?php
-                include("../connect.php");
-                session_start();
+
 
                 $adminId = $_SESSION['UserID'];
                 $filter = $_GET['filter'] ?? 'all';
@@ -241,22 +310,33 @@
             const currentFilter = "<?php echo $filter; ?>";
             $("#filter").val(currentFilter);
 
+            function showLoading() {
+                $("#loadingOverlay").fadeIn(200);
+            }
+
+            function hideLoading() {
+                $("#loadingOverlay").fadeOut(200);
+            }
+
             $(".approve").click(function() {
                 let tr = $(this).closest("tr");
                 let appId = tr.data("app-id");
                 let studentName = tr.find("td:nth-child(2)").text();
 
                 if (confirm("Are you sure you want to APPROVE " + studentName + "'s application?")) {
+                    showLoading();
                     $.post("adminApproval.php", {
                         action: "approve",
                         appId: appId
                     }, function(response) {
-                        console.log("Server response:", response); // DEBUG 看清楚回应
-                        if (response.trim() === "success") { 
+                        console.log("Server response:", response);
+                        hideLoading();
+                        if (response.trim() === "success") {
+                            alert("Successfully approved and email notification sent.");
                             tr.remove();
                             numbering();
                         } else {
-                            alert("Approval failed: " + response); 
+                            alert("Approval failed: " + response);
                         }
                     });
 
@@ -274,13 +354,16 @@
                     alert("Rejection reason is required.");
                     return;
                 }
+                showLoading();
 
                 $.post("adminApproval.php", {
                     action: "reject",
                     appId: appId,
                     remarks: reason
                 }, function(response) {
+                    hideLoading();
                     if (response === "success") {
+                        alert("Application rejected and student has been notified.");
                         tr.remove();
                         numbering();
                     } else {
@@ -302,6 +385,12 @@
             });
         }
     </script>
+    <div id="loadingOverlay" style="display:none;">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <div class="spinner-text">Processing...</div>
+        </div>
+    </div>
 </body>
 
 </html>

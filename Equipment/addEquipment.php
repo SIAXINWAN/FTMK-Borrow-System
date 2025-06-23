@@ -50,6 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     $conn->close();
-    header("Location: EquipmentAddition.php");
+    header("Location: equipmentAddition.php");
     exit();
 }

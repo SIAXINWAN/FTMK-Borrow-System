@@ -20,22 +20,31 @@ unset($_SESSION['success']);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
         }
 
         header {
             background-color: #ffcc00;
-            padding: 10px;
-        }
-
-        header table {
-            width: 100%;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
         }
 
         header h1 {
-            margin: 0;
-            text-align: center;
+            margin: 0 auto;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .logo {
+            height: 80px;
         }
 
         #filterEquipment {
@@ -94,33 +103,14 @@ unset($_SESSION['success']);
             cursor: pointer;
             padding: 10px;
         }
-
-        .header {
-            background-color: #ffcc00;
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            height: 70px;
-            margin-right: 20px;
-        }
-
-        .header h1 {
-            flex: 1;
-            text-align: center;
-            color: #000;
-            font-weight: bold;
-        }
     </style>
 </head>
 
 <body>
-    <div class="header">
+    <header>
         <a href="adminMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" class="logo"></a>
         <h1>Equipment Inventory</h1>
-    </div>
+    </header>
 
 
     <div id="filterEquipment">

@@ -4,22 +4,22 @@ include("../connect.php");
 if (isset($_GET['serviceID'])) {
   $serviceID = $_GET['serviceID'];
 
-$stmt1 = $conn->prepare("SELECT sl.*, e.EquipmentName 
+  $stmt1 = $conn->prepare("SELECT sl.*, e.EquipmentName 
                          FROM servicelog sl 
                          JOIN equipment e ON sl.EquipmentID = e.EquipmentID 
                          WHERE sl.ServiceID = ?");
-$stmt1->bind_param("s", $serviceID);
-$stmt1->execute();
-$result = $stmt1->get_result();
-$data = $result->fetch_assoc();
-$stmt1->close();
+  $stmt1->bind_param("s", $serviceID);
+  $stmt1->execute();
+  $result = $stmt1->get_result();
+  $data = $result->fetch_assoc();
+  $stmt1->close();
 
-$stmt2 = $conn->prepare("SELECT * FROM service_history WHERE ServiceID = ?");
-$stmt2->bind_param("s", $serviceID);
-$stmt2->execute();
-$historyResult = $stmt2->get_result();
-$history = $historyResult->fetch_assoc();
-$stmt2->close();
+  $stmt2 = $conn->prepare("SELECT * FROM service_history WHERE ServiceID = ?");
+  $stmt2->bind_param("s", $serviceID);
+  $stmt2->execute();
+  $historyResult = $stmt2->get_result();
+  $history = $historyResult->fetch_assoc();
+  $stmt2->close();
 
 
   $acceptDate = $history['AcceptDate'] ?? null;
@@ -48,23 +48,24 @@ $stmt2->close();
       margin: 0;
     }
 
-    .header {
+
+
+
+    header {
       background-color: #ffcc00;
-      padding: 15px 30px;
+      padding: 15px 20px;
       display: flex;
       align-items: center;
     }
 
-    .logo {
-      height: 70px;
-      margin-right: 20px;
-    }
-
-    .header h1 {
-      flex: 1;
-      text-align: center;
+    header h1 {
+      margin: 0 auto;
       color: #000;
       font-weight: bold;
+    }
+
+    .logo {
+      height: 80px;
     }
 
     .container {
@@ -136,12 +137,12 @@ $stmt2->close();
 </head>
 
 <body>
-  <div class="header">
+  <header>
     <a href="companyRepairServiceRequestList.php">
       <img src="../0images/ftmkLogo_Yellow.png" alt="FTMK Logo" class="logo" />
     </a>
     <h1>Service Status</h1>
-  </div>
+  </header>
 
   <div class="container">
     <div class="text">Equipment Details:</div>

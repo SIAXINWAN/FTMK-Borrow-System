@@ -38,8 +38,31 @@ $no = 1;
       width: 80%;
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+    }
+
     header {
       background-color: #ffcc00;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0 auto;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .logo {
+      height: 80px;
     }
 
     section table {
@@ -112,16 +135,11 @@ $no = 1;
 
 <body>
   <header>
-    <table>
-      <tr>
-        <td>
-          <a href="adminMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" width="" height="80px" /></a>
-        </td>
-        <td>
-          <h1 style="text-align: center">Service Request Approval</h1>
-        </td>
-      </tr>
-    </table>
+
+    <a href="adminMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" width="" height="80px" /></a>
+
+    <h1 style="text-align: center">Service Request Approval</h1>
+
   </header>
   <section>
     <table cellspacing="0">

@@ -12,9 +12,9 @@ $stmt1 = $conn->prepare("SELECT ba.ApplicationID, ba.ApplyDate, ba.Purpose, ba.Q
                    JOIN equipment e ON ba.EquipmentID = e.EquipmentID
                    WHERE ba.UserID = ?
                    ORDER BY ba.ApplicationID DESC LIMIT 1");
-$stmt1->bind_param('s',$userId);
+$stmt1->bind_param('s', $userId);
 $stmt1->execute();
-$appResult= $stmt1->get_result();
+$appResult = $stmt1->get_result();
 
 $appRow = $appResult->fetch_assoc();
 $applicationId = $appRow['ApplicationID'];
@@ -22,19 +22,19 @@ $applicationId = $appRow['ApplicationID'];
 $stmt2 = $conn->prepare("SELECT ApproverRole, Status, Remarks 
                 FROM approval 
                 WHERE ApplicationID = ?");
-$stmt2->bind_param('i',$applicationId);
+$stmt2->bind_param('i', $applicationId);
 $stmt2->execute();
-$approvalResult= $stmt2->get_result();
+$approvalResult = $stmt2->get_result();
 
 
 $statuses = [
   'Admin' => 'Pending',
-  'Security Office'=>'Pending'
+  'Security Office' => 'Pending'
 ];
 
 $remarks = [
   'Admin' => '',
-  'Security Office' =>''
+  'Security Office' => ''
 ];
 
 while ($row = $approvalResult->fetch_assoc()) {
@@ -63,23 +63,21 @@ while ($row = $approvalResult->fetch_assoc()) {
       margin: 0;
     }
 
-    .header {
+    header {
       background-color: #ffcc00;
-      padding: 15px 30px;
+      padding: 15px 20px;
       display: flex;
       align-items: center;
     }
 
-    .logo {
-      height: 70px;
-      margin-right: 20px;
-    }
-
-    .header h1 {
-      flex: 1;
-      text-align: center;
+    header h1 {
+      margin: 0 auto;
       color: #000;
       font-weight: bold;
+    }
+
+    .logo {
+      height: 80px;
     }
 
     .container {
@@ -164,12 +162,12 @@ while ($row = $approvalResult->fetch_assoc()) {
 
 <body>
 
-  <div class="header">
+  <header>
     <a href="lecturerMainPage.php">
       <img src="../0images/ftmkLogo_Yellow.png" alt="FTMK Logo" class="logo" />
     </a>
     <h1>Application Status</h1>
-  </div>
+  </header>
 
   <div class="container">
     <div class="info">
@@ -227,11 +225,11 @@ while ($row = $approvalResult->fetch_assoc()) {
     <div class="pickup-box">
       <?php
       if (
-        $statuses['Admin'] === 'Approved'&& $statuses['Security Office']==='Approved'
+        $statuses['Admin'] === 'Approved' && $statuses['Security Office'] === 'Approved'
       ) {
         echo "The device is approved to be picked up at the lab counter.";
       } else if (
-        $statuses['Admin'] === 'Rejected' || $statuses['Security Office']==='Rejected'
+        $statuses['Admin'] === 'Rejected' || $statuses['Security Office'] === 'Rejected'
       ) {
         echo "Your application has been rejected.<br>";
 

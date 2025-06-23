@@ -1,3 +1,9 @@
+<?php
+
+include("../connect.php");
+session_start(); ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,15 +14,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
-        table {
-            width: 80%;
+        * {
+            box-sizing: border-box;
         }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
 
         header {
             background-color: #ffcc00;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0 auto;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .logo {
+            height: 80px;
         }
 
         section table {
+            width: 80%;
             margin-left: auto;
             margin-right: auto;
             margin-top: 50px;
@@ -81,19 +108,59 @@
             padding: 0;
             margin: 0 auto;
         }
+
+        /* Loading Overlay Styling */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner-container {
+            text-align: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #ffcc00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        .spinner-text {
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body>
     <header>
-        <table>
-            <tr>
-                <td><a href="lecturerMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" width="" height="80px"></a></td>
-                <td>
-                    <h1 style="text-align: center;">Student Application Approval</h1>
-                </td>
-            </tr>
-        </table>
+        <a href="lecturerMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" class="logo"></a>
+        <h1>Student Application Approval</h1>
+
     </header>
     <section>
         <table cellspacing="0">
@@ -109,20 +176,19 @@
             </thead>
             <tbody>
                 <?php
-                include("../connect.php");
-                session_start();
-               $lecturerId = $_SESSION['UserID'];
 
-$stmt = $conn->prepare("SELECT a.ApplicationID, u.Name AS StudentName, e.EquipmentName, a.Purpose, a.Quantity
+                $lecturerId = $_SESSION['UserID'];
+
+                $stmt = $conn->prepare("SELECT a.ApplicationID, u.Name AS StudentName, e.EquipmentName, a.Purpose, a.Quantity
                         FROM borrow_applications a
                         JOIN users u ON a.UserID = u.UserID
                         JOIN equipment e ON a.EquipmentID = e.EquipmentID
                         JOIN approval ap ON a.ApplicationID = ap.ApplicationID
                         WHERE ap.ApproverRole = 'Lecturer' AND ap.ApproverID = ? AND ap.Status = 'Pending'");
-$stmt->bind_param("s", $lecturerId);
-$stmt->execute();
-$result = $stmt->get_result();
-$stmt->close();
+                $stmt->bind_param("s", $lecturerId);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $stmt->close();
 
                 $counter = 1;
                 if ($result && $result->num_rows > 0) {
@@ -152,21 +218,35 @@ $stmt->close();
 
     <script>
         $(document).ready(function() {
+
+            function showLoading() {
+                $("#loadingOverlay").fadeIn(200);
+            }
+
+            function hideLoading() {
+                $("#loadingOverlay").fadeOut(200);
+            }
+
             $(".approve").click(function() {
                 let tr = $(this).closest("tr");
                 let appId = tr.data("app-id");
                 let studentName = tr.find("td:nth-child(2)").text();
 
                 if (confirm("Are you sure you want to APPROVE " + studentName + "'s application?")) {
+                    showLoading();
+
                     $.post("lecturerApproval.php", {
                         action: "approve",
                         appId: appId
                     }, function(response) {
+                        hideLoading();
+
                         if (response === "success") {
+                            alert("Successfully approved and email notification sent.");
                             tr.remove();
                             numbering();
                         } else {
-                            alert("Approval failed.");
+                            alert("Approval failed: " + response);
                         }
                     });
                 }
@@ -184,21 +264,26 @@ $stmt->close();
                     return;
                 }
 
+                showLoading();
+
                 $.post("lecturerApproval.php", {
                     action: "reject",
                     appId: appId,
                     remarks: reason
                 }, function(response) {
+                    hideLoading(); // ✅ 隐藏 loading
                     console.log("Server response:", response);
+
                     if (response === "success") {
+                        alert("Application rejected and student has been notified.");
                         tr.remove();
                         numbering();
                     } else {
                         alert("Rejection failed. Server said: " + response);
                     }
                 });
-
             });
+
 
         });
 
@@ -214,6 +299,15 @@ $stmt->close();
             });
         }
     </script>
+    <!-- Loading Spinner Overlay -->
+    <div id="loadingOverlay" style="display:none;">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <div class="spinner-text">Processing...</div>
+        </div>
+    </div>
+
+
 </body>
 
 </html>

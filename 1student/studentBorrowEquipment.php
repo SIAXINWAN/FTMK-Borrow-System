@@ -42,23 +42,21 @@ $lresult = $stmt3->get_result();
       margin: 0;
     }
 
-    .header {
+    header {
       background-color: #ffcc00;
-      padding: 15px 30px;
+      padding: 15px 20px;
       display: flex;
       align-items: center;
     }
 
-    .logo {
-      height: 70px;
-      margin-right: 20px;
-    }
-
-    .header h1 {
-      flex: 1;
-      text-align: center;
+    header h1 {
+      margin: 0 auto;
       color: #000;
       font-weight: bold;
+    }
+
+    .logo {
+      height: 80px;
     }
 
     .form-container {
@@ -156,20 +154,77 @@ $lresult = $stmt3->get_result();
     .clear-btn {
       background: #ccc;
     }
+
+    /* Loading Overlay Styling */
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spinner-container {
+      text-align: center;
+      color: white;
+      font-size: 20px;
+    }
+
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #ffcc00;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 15px;
+      animation: spin 1s linear infinite;
+    }
+
+    .spinner-text {
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <div class="header">
+  <header>
     <a href="../Equipment/showEquipment.php">
       <img src="../0images/ftmkLogo_Yellow.png" alt="FTMK Logo" class="logo" />
     </a>
     <h1>Intangible Assets Borrow Form</h1>
-  </div>
+  </header>
 
   <div class="form-container">
     <form action="../Borrow/submitBorrowApplication.php?id=<?php echo htmlspecialchars($equipmentID); ?>" method="post">
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          const form = document.querySelector("form");
+          if (form) {
+            form.addEventListener("submit", function() {
+              // Show the spinner when form is submitted
+              document.getElementById("loadingOverlay").style.display = "flex";
+            });
+          }
+        });
+      </script>
+
       <h2>Applicant's Information</h2>
       <div class="form-section">
         <div class="form-group">
@@ -260,7 +315,12 @@ $lresult = $stmt3->get_result();
       </script>
     </form>
   </div>
-
+  <div id="loadingOverlay" style="display: none;">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <div class="spinner-text">Processing...</div>
+    </div>
+  </div>
 </body>
 
 </html>

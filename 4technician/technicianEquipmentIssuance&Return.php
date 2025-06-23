@@ -8,15 +8,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
-        table {
-            width: 80%;
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
         }
 
         header {
             background-color: #ffcc00;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0 auto;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .logo {
+            height: 80px;
         }
 
         section table {
+            width: 80%;
             margin-left: auto;
             margin-right: auto;
             margin-top: 50px;
@@ -76,14 +96,9 @@
 
 <body>
     <header>
-        <table>
-            <tr>
-                <td><a href="technicianMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" height="80px"></a></td>
-                <td>
-                    <h1 style="text-align: center;">Equipment Issuance & Return</h1>
-                </td>
-            </tr>
-        </table>
+        <a href="technicianMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" height="80px"></a>
+        <h1 style="text-align: center;">Equipment Issuance & Return</h1>
+
     </header>
     <section>
         <table cellspacing="0">
@@ -109,9 +124,9 @@
                         JOIN equipment e ON ba.EquipmentID = e.EquipmentID
                         JOIN borrow_history bh ON bh.ApplicationID = ba.ApplicationID
                         WHERE ba.ApplicationStatus = 'Approved'");
-$stmt->execute();
-$result = $stmt->get_result();
-$stmt->close();
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $stmt->close();
 
                 $no = 1;
 

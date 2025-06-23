@@ -51,7 +51,7 @@
                 <i class="fas fa-boxes"></i>
                 <span>Equipment Inventory</span>
             </a>
-            <a href="../Equipment/EquipmentAddition.php" class="button">
+            <a href="../Equipment/equipmentAddition.php" class="button">
                 <i class="fas fa-plus-circle"></i>
                 <span>Equipment Addition</span>
             </a>

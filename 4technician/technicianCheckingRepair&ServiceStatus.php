@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,23 +15,21 @@
       margin: 0;
     }
 
-    .header {
+    header {
       background-color: #ffcc00;
-      padding: 15px 30px;
+      padding: 15px 20px;
       display: flex;
       align-items: center;
     }
 
-    .logo {
-      height: 70px;
-      margin-right: 20px;
-    }
-
-    .header h1 {
-      flex: 1;
-      text-align: center;
+    header h1 {
+      margin: 0 auto;
       color: #000;
       font-weight: bold;
+    }
+
+    .logo {
+      height: 80px;
     }
 
     .container {
@@ -125,13 +124,14 @@
     }
   </style>
 </head>
+
 <body>
-  <div class="header">
+  <header>
     <a href="technicianMainPage.php">
       <img src="../0images/ftmkLogo_Yellow.png" alt="FTMK Logo" class="logo" />
     </a>
     <h1>Checking Repair & Service Status</h1>
-  </div>
+  </header>
 
   <div class="container">
     <div class="info">
@@ -174,13 +174,18 @@
     <table class="equipment-table">
       <tr>
         <td>Company Repair</td>
-        <th><div class="condition service">Done</div></th>
+        <th>
+          <div class="condition service">Done</div>
+        </th>
       </tr>
       <tr>
         <td>FTMK</td>
-        <td><div class="condition service">Received</div></td>
+        <td>
+          <div class="condition service">Received</div>
+        </td>
       </tr>
     </table>
   </div>
 </body>
+
 </html>

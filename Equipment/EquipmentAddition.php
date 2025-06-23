@@ -27,23 +27,21 @@ unset($_SESSION['success'], $_SESSION['error'], $_SESSION['idError'], $_SESSION[
       background-color: #f5f5f5;
     }
 
-    .header {
+    header {
       background-color: #ffcc00;
-      padding: 15px 30px;
+      padding: 15px 20px;
       display: flex;
       align-items: center;
     }
 
-    .logo {
-      height: 70px;
-      margin-right: 20px;
-    }
-
-    .header h1 {
-      flex: 1;
-      text-align: center;
+    header h1 {
+      margin: 0 auto;
       color: #000;
       font-weight: bold;
+    }
+
+    .logo {
+      height: 80px;
     }
 
     .container {
@@ -110,7 +108,7 @@ unset($_SESSION['success'], $_SESSION['error'], $_SESSION['idError'], $_SESSION[
 
 <body>
 
-  <div class="header">
+  <header>
     <?php
     if (isset($_SESSION['role'])) {
       switch ($_SESSION['role']) {
@@ -130,7 +128,7 @@ unset($_SESSION['success'], $_SESSION['error'], $_SESSION['idError'], $_SESSION[
       <img src="../0images/ftmkLogo_Yellow.png" alt="FTMK Logo" class="logo" />
     </a>
     <h1>Equipment Addition</h1>
-  </div>
+  </header>
 
   <div class="container">
     <?php if (!empty($success)): ?>

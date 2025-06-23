@@ -68,23 +68,21 @@ while ($row = $approvalResult->fetch_assoc()) {
       margin: 0;
     }
 
-    .header {
+    header {
       background-color: #ffcc00;
-      padding: 15px 30px;
+      padding: 15px 20px;
       display: flex;
       align-items: center;
     }
 
-    .logo {
-      height: 70px;
-      margin-right: 20px;
-    }
-
-    .header h1 {
-      flex: 1;
-      text-align: center;
+    header h1 {
+      margin: 0 auto;
       color: #000;
       font-weight: bold;
+    }
+
+    .logo {
+      height: 80px;
     }
 
     .container {
@@ -169,12 +167,12 @@ while ($row = $approvalResult->fetch_assoc()) {
 
 <body>
 
-  <div class="header">
+  <header>
     <a href="studentMainPage.php">
       <img src="../0images/ftmkLogo_Yellow.png" alt="FTMK Logo" class="logo" />
     </a>
     <h1>Application Status</h1>
-  </div>
+  </header>
 
   <div class="container">
     <div class="info">

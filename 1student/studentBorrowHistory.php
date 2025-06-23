@@ -143,7 +143,7 @@ $no = 1;
           $returnDate = $row['ReturnDate'];
 
           if (empty($returnDate) || $returnDate === '0000-00-00') {
-            if ($today > $dueDate) {
+             if ($today > $dueDate && !empty($dueDate)) {
               echo "<span style='color: red; font-weight: bold;'>Late</span>";
             } else {
               echo "-";
