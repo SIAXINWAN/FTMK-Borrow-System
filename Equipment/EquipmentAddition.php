@@ -193,6 +193,7 @@ unset($_SESSION['success'], $_SESSION['error'], $_SESSION['idError'], $_SESSION[
         <input type="date" name="date" value="<?= $old['date'] ?? '' ?>" required />
       </div>
 
+
       <div class="button-group">
         <button type="submit" class="add-button">Add</button>
         <button type="reset" class="clear-button">Clear</button>

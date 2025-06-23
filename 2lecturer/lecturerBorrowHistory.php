@@ -4,16 +4,17 @@ session_start();
 
 $userId = $_SESSION['UserID'];
 
-$stmt = $conn->prepare("SELECT bh.*, e.EquipmentName, e.ModelNumber 
-                        FROM borrow_history bh
-                        JOIN equipment e ON bh.EquipmentID = e.EquipmentID
-                        WHERE bh.UserID = ?
+$stmt = $conn->prepare("SELECT bh.*, e.EquipmentName, e.ModelNumber, s.* ,ba.*
+        FROM borrow_history bh
+        JOIN borrow_applications ba ON bh.ApplicationID = ba.ApplicationID
+        JOIN equipment e ON ba.EquipmentID = e.EquipmentID
+        JOIN users s ON ba.UserID = s.UserID
+        WHERE s.UserID = ?
                         ORDER BY bh.BorrowID DESC");
 
 $stmt->bind_param("s", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
-
 
 $no = 1;
 ?>
@@ -79,6 +80,21 @@ $no = 1;
       padding-top: 50px;
       padding-bottom: 20px;
     }
+
+    .no-data-row td {
+      font-style: italic;
+      color: #555;
+      background-color: #f0f0f0;
+    }
+
+    .pickup-alert {
+      color: green;
+      font-weight: bold;
+      background-color: #e6ffe6;
+      padding: 5px 10px;
+      border-radius: 8px;
+      display: inline-block;
+    }
   </style>
 </head>
 
@@ -100,72 +116,100 @@ $no = 1;
     </table>
   </div>
 
-
   <table id="borrowTable" class="borrowTable">
-    <tr>
-      <th>No</th>
-      <th>Equipment ID</th>
-      <th>Equipment Name</th>
-      <th>Model Number</th>
-      <th>Borrow Date</th>
-      <th>Due Date</th>
-      <th>Return Date</th>
-    </tr>
-    <?php while ($row = $result->fetch_assoc()) { ?>
+    <thead>
       <tr>
-        <td><?php echo $no++; ?></td>
-        <td><?php echo htmlspecialchars($row['EquipmentID']); ?></td>
-        <td><?php echo htmlspecialchars($row['EquipmentName']); ?></td>
-        <td><?php echo htmlspecialchars($row['ModelNumber']); ?></td>
-        <td><?php echo htmlspecialchars($row['BorrowDate']); ?></td>
-        <td><?php echo htmlspecialchars($row['DueDate']); ?></td>
-        <td>
-          <?php
-          $today = date("Y-m-d");
-          $dueDate = $row['DueDate'];
-          $returnDate = $row['ReturnDate'];
-
-          if (empty($returnDate) || $returnDate === '0000-00-00') {
-            if ($today > $dueDate && !empty($dueDate)) {
-              echo "<span style='color: red; font-weight: bold;'>Late</span>";
-            } else {
-              echo "-";
-            }
-          } else {
-            echo htmlspecialchars($returnDate);
-          }
-          ?>
-        </td>
+        <th>No</th>
+        <th>Equipment ID</th>
+        <th>Equipment Name</th>
+        <th>Model Number</th>
+        <th>Borrow Date</th>
+        <th>Due Date</th>
+        <th>Return Date</th>
       </tr>
-    <?php } ?>
-  </table>
+    </thead>
+    <tbody>
+      <?php while ($row = $result->fetch_assoc()) { ?>
+        <tr>
+          <td><?php echo $no++; ?></td>
+          <td><?php echo htmlspecialchars($row['EquipmentID']); ?></td>
+          <td><?php echo htmlspecialchars($row['EquipmentName']); ?></td>
+          <td><?php echo htmlspecialchars($row['ModelNumber']); ?></td>
+          <td><?php
+              if ($row['BorrowDate']) {
+                echo htmlspecialchars($row['BorrowDate']);
+              } else {
+                echo "<span class='pickup-alert'>Ready for pickup</span>";
+              }
+              ?>
+          </td>
+          <td><?php echo $row['DueDate'] ? htmlspecialchars($row['DueDate']) : '-'; ?></td>
+          <td>
+            <?php
+            $today = date("Y-m-d");
+            $dueDate = $row['DueDate'];
+            $returnDate = $row['ReturnDate'];
 
+            if (empty($returnDate) || $returnDate === '0000-00-00') {
+              if ($today > $dueDate && !empty($dueDate)) {
+                echo "<span style='color: red; font-weight: bold;'>Late</span>";
+              } else {
+                echo "-";
+              }
+            } else {
+              echo htmlspecialchars($returnDate);
+            }
+            ?>
+          </td>
+        </tr>
+      <?php } ?>
+    </tbody>
+  </table>
 
   <script>
     const filterSelect = document.getElementById("color");
     const table = document.getElementById("borrowTable");
+    const tbody = table.querySelector("tbody");
 
     filterSelect.addEventListener("change", function() {
       const filterValue = this.value;
+      let visibleCount = 0;
 
-      for (let i = 1; i < table.rows.length; i++) {
-        const row = table.rows[i];
+      const oldNoDataRow = document.querySelector(".no-data-row");
+      if (oldNoDataRow) oldNoDataRow.remove();
+
+      for (let i = 0; i < tbody.rows.length; i++) {
+        const row = tbody.rows[i];
         const returnDateCell = row.cells[6];
         const returnDate = returnDateCell.textContent.trim();
+        let show = false;
 
         if (filterValue === "all") {
-          row.style.display = "";
+          show = true;
         } else if (filterValue === "current") {
-          row.style.display = (returnDate === "-" || returnDate === "") ? "" : "none";
+          show = (returnDate === "-" || returnDate === "" || returnDate === "Late");
         } else if (filterValue === "past") {
-          row.style.display = (returnDate !== "-" && returnDate !== "") ? "" : "none";
+          show = (returnDate !== "-" && returnDate !== "" && returnDate !== "Late");
         }
+
+        row.style.display = show ? "" : "none";
+        if (show) visibleCount++;
+      }
+
+      if (visibleCount === 0) {
+        const noDataRow = document.createElement("tr");
+        noDataRow.className = "no-data-row";
+
+        const td = document.createElement("td");
+        td.colSpan = 7;
+        td.textContent = "No records found for selected filter.";
+        td.style.textAlign = "center";
+
+        noDataRow.appendChild(td);
+        tbody.appendChild(noDataRow);
       }
     });
   </script>
-</body>
-
-
 </body>
 
 </html>

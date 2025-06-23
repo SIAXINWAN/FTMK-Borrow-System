@@ -6,7 +6,7 @@ if (isset($_GET['serviceID'])) {
     $serviceID = $_GET['serviceID'];
 }
 
-$stmt = $conn->prepare("SELECT sa.*, sl.EquipmentID, e.EquipmentName 
+$stmt = $conn->prepare("SELECT sa.*, sl.*, e.EquipmentName 
                         FROM service_approval sa
                         JOIN servicelog sl ON sa.ServiceID = sl.ServiceID
                         JOIN equipment e ON sl.EquipmentID = e.EquipmentID
@@ -40,9 +40,7 @@ $repairStatus = $history['Status'];
 $note = $history['Note'];
 $returnDate = $history['ReturnDate'];
 $receivedReturn = $history['ReceivedReturn'];
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -86,11 +84,6 @@ $receivedReturn = $history['ReceivedReturn'];
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .info label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-
         .equipment-table {
             width: 100%;
             border-collapse: collapse;
@@ -104,10 +97,6 @@ $receivedReturn = $history['ReceivedReturn'];
             text-align: center;
         }
 
-        .status {
-            margin: 30px 0;
-        }
-
         .status-item {
             display: flex;
             align-items: center;
@@ -116,57 +105,6 @@ $receivedReturn = $history['ReceivedReturn'];
 
         .status-label {
             width: 320px;
-        }
-
-        .condition {
-            padding: 5px 15px;
-            color: black;
-            border-radius: 4px;
-            font-weight: bold;
-            min-width: 100px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .acceptance {
-            background-color: limegreen;
-        }
-
-        .pickup {
-            background-color: deepskyblue;
-        }
-
-        .service {
-            background-color: mediumorchid;
-        }
-
-        .incomplete {
-            background-color: mediumorchid;
-            margin-left: 20px;
-        }
-
-        .date-picker {
-            margin-right: 20px;
-            padding: 5px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .text {
-            color: black;
-            font-size: 18px;
-            margin: 10px 0 5px;
-        }
-
-        .pickup-box {
-            border: 1px solid #000;
-            padding: 15px;
-        }
-
-        .note-box {
-            border: 1px solid #000;
-            padding: 15px;
         }
 
         .status-button {
@@ -181,28 +119,31 @@ $receivedReturn = $history['ReceivedReturn'];
         }
 
         .status-approved {
-            background-color: limegreen;
+            background-color: #00b894; /* 青色 */
         }
 
         .status-pending {
-            background-color: gray;
+            background-color: #b2bec3; /* 灰色 */
         }
 
         .status-incomplete {
-            background-color: orangered;
+            background-color: #d63031; /* 红色 */
+            color: white;
         }
 
-        .status-failed {
-            background-color: red;
-            color: white;
+        .text {
+            font-size: 18px;
+            margin: 10px 0 5px;
+        }
+
+        .note-box {
+            border: 1px solid #000;
+            padding: 15px;
         }
     </style>
 </head>
 
 <body>
-
-
-
     <header>
         <a href="../Service/showServiceList.php">
             <img src="../0images/ftmkLogo_Yellow.png" alt="FTMK Logo" class="logo" />
@@ -211,54 +152,37 @@ $receivedReturn = $history['ReceivedReturn'];
     </header>
 
     <div class="container">
-        <div class="info">
-            <label>Equipment Details:</label>
-        </div>
-
         <table class="equipment-table">
+            <tr><th>Name</th><th>Description</th></tr>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-            </tr>
-            <tr>
-                <?php
-                echo "<td>" . htmlspecialchars($row['EquipmentID']) . " </td>";
-                echo "<td>" . htmlspecialchars($row['EquipmentName']) . " </td>";
-                ?>
+                <td><?= htmlspecialchars($row['EquipmentName']) ?></td>
+                <td><?= htmlspecialchars($row['Description']) ?></td>
             </tr>
         </table>
 
-
-
         <div class="status-item">
             <div class="status-label">Admin Approval</div>
-            <button
-                class="status-button <?php echo ($adminDecision === 'Approved') ? 'status-approved' : 'status-pending'; ?>"
-                disabled>
-                <?php echo ($adminDecision === 'Approved') ? 'Approved' : 'Pending'; ?>
+            <button class="status-button <?= ($adminDecision === 'Approved') ? 'status-approved' : 'status-pending' ?>" disabled>
+                <?= ($adminDecision === 'Approved') ? 'Approved' : 'Pending' ?>
             </button>
         </div>
 
-
         <div class="status-item">
-
             <div class="status-label">Service Request Acceptance</div>
-            <button
-                class="status-button <?php echo ($acceptDate) ? 'status-approved' : 'status-pending'; ?>"
-                disabled>
-                <?php echo ($acceptDate) ? 'Confirmed' : 'Pending'; ?>
+            <button class="status-button <?= $acceptDate ? 'status-approved' : 'status-pending' ?>" disabled>
+                <?= $acceptDate ? 'Confirmed' : 'Pending' ?>
             </button>
             <?php if ($acceptDate): ?>
-                <h4 style="padding-left: 20px;"><?php echo date("Y-m-d H:i", strtotime($acceptDate)); ?></h4>
+                <span style="padding-left: 20px; font-weight: bold; color: #555;">
+                    <?= date("Y-m-d H:i", strtotime($acceptDate)) ?>
+                </span>
             <?php endif; ?>
         </div>
 
         <div class="status-item">
             <div class="status-label">Pickup Equipment</div>
-            <button
-                class="status-button <?php echo ($actionTaken === 'Done') ? 'status-approved' : 'status-pending'; ?>"
-                disabled>
-                <?php echo ($actionTaken === 'Done') ? 'Done' : 'Pending'; ?>
+            <button class="status-button <?= ($actionTaken === 'Done') ? 'status-approved' : 'status-pending' ?>" disabled>
+                <?= ($actionTaken === 'Done') ? 'Done' : 'Pending' ?>
             </button>
         </div>
 
@@ -266,78 +190,57 @@ $receivedReturn = $history['ReceivedReturn'];
             <div class="status-label">Equipment Service & Repair Status</div>
             <?php
             $repairDisplay = $repairStatus ?? 'Pending';
-
             if ($repairDisplay === 'Completed') {
                 $repairClass = 'status-approved';
-            } elseif ($repairDisplay === 'Failed') {
-                $repairClass = 'status-failed';
+            } elseif ($repairDisplay === 'Failed' || $repairDisplay === 'Incomplete') {
+                $repairClass = 'status-incomplete';
             } else {
                 $repairClass = 'status-pending';
             }
             ?>
-            <button class="status-button <?php echo $repairClass; ?>" disabled>
-                <?php echo htmlspecialchars($repairDisplay); ?>
+            <button class="status-button <?= $repairClass ?>" disabled>
+                <?= htmlspecialchars($repairDisplay) ?>
             </button>
         </div>
 
         <?php if ($note): ?>
             <div class="text">Notes:</div>
             <div class="note-box">
-                <?php echo nl2br(htmlspecialchars($note)); ?>
+                <?= nl2br(htmlspecialchars($note)) ?>
             </div>
         <?php endif; ?>
 
-
-
-        <div class="text" style="font-weight: bold;padding-top:8px">Return Equipment:</div>
+        <div class="text" style="font-weight: bold; padding-top: 8px">Return Equipment:</div>
         <table class="equipment-table">
             <tr>
                 <td>Company Repair</td>
                 <td>
-                    <button class="status-button <?php echo $returnDate ? 'status-approved' : 'status-pending'; ?>" disabled>
-                        <?php echo $returnDate ? 'Done' : 'Pending'; ?>
+                    <button class="status-button <?= $returnDate ? 'status-approved' : 'status-pending' ?>" disabled>
+                        <?= $returnDate ? 'Done' : 'Pending' ?>
                     </button>
                 </td>
             </tr>
-
             <tr>
                 <td>FTMK</td>
                 <td>
                     <?php if (!$returnDate): ?>
                         <button class="status-button status-pending" disabled>Pending</button>
-
                     <?php elseif ($receivedReturn !== 'Done'): ?>
                         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Technician'): ?>
                             <form method="POST" action="../Service/receiveReturn.php" onsubmit="return confirm('Confirm received return?');">
-                                <input type="hidden" name="serviceID" value="<?php echo $serviceID; ?>">
+                                <input type="hidden" name="serviceID" value="<?= $serviceID ?>">
                                 <button type="submit" class="status-button status-approved">Received</button>
                             </form>
                         <?php else: ?>
                             <button class="status-button status-pending" disabled>Pending</button>
                         <?php endif; ?>
-
                     <?php else: ?>
                         <button class="status-button status-approved" disabled>Received</button>
                     <?php endif; ?>
                 </td>
             </tr>
-
-
         </table>
-
-
     </div>
-
-    <script>
-        function validateReturn() {
-            const returnDate = "<?php echo $returnDate; ?>";
-            if (!returnDate) {
-                alert("You cannot receive this return yet. Return date is not set.");
-                return false;
-            }
-            return true;
-        }
-    </script>
 </body>
 
 </html>

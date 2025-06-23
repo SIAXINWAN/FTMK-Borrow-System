@@ -153,6 +153,12 @@ session_start(); ?>
                 transform: rotate(360deg);
             }
         }
+
+        .no-data-row td {
+            font-style: italic;
+            color: #555;
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 
@@ -208,7 +214,7 @@ session_start(); ?>
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6'>No pending applications.</td></tr>";
+                    echo "<tr class='no-data-row'><td colspan='6' >No pending applications.</td></tr>";
                 }
                 ?>
 

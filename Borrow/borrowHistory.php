@@ -1,24 +1,20 @@
 <?php
-
 session_start();
 include("../connect.php");
 
-$sql = "SELECT u.*, e.EquipmentName, s.* 
-        FROM borrow_history u 
-        JOIN equipment e ON u.EquipmentID = e.EquipmentID
-        JOIN users s ON u.UserId = s.UserId
+$sql = "SELECT u.*, e.EquipmentName, s.* ,ba.*
+        FROM borrow_history u
+        JOIN borrow_applications ba ON u.ApplicationID = ba.ApplicationID
+        JOIN equipment e ON ba.EquipmentID = e.EquipmentID
+        JOIN users s ON ba.UserID = s.UserID
         ORDER BY u.BorrowID DESC";
 
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $result = $stmt->get_result();
 
-
-
-
 $no = 1;
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -81,6 +77,12 @@ $no = 1;
             padding-top: 50px;
             padding-bottom: 20px;
         }
+
+        .no-data-row td {
+            font-style: italic;
+            background-color: #f9f9f9;
+            color: #555;
+        }
     </style>
 </head>
 
@@ -95,6 +97,8 @@ $no = 1;
                 case 'Admin':
                     $homeLink = "../5admin/adminMainPage.php";
                     break;
+                default:
+                    $homeLink = "../index.php";
             }
         } else {
             $homeLink = "../index.php";
@@ -118,16 +122,18 @@ $no = 1;
 
     <div id="borrow">
         <table id="borrowTable" class="borrowTable">
-            <tr>
-                <th>No</th>
-                <th>Borrower Name</th>
-                <th>Borrower Role</th>
-                <th>Equipment Name</th>
-                <th>Borrow Date</th>
-                <th>Due Date</th>
-                <th>Return Date</th>
-            </tr>
-            <tbody>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Borrower Name</th>
+                    <th>Borrower Role</th>
+                    <th>Equipment Name</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
                 <?php while ($row = $result->fetch_assoc()) { ?>
                     <tr>
                         <td><?php echo $no++; ?></td>
@@ -153,22 +159,27 @@ $no = 1;
                             }
                             ?>
                         </td>
-
                     </tr>
                 <?php } ?>
             </tbody>
-
         </table>
     </div>
+
     <script>
         function filterTable() {
             const filter = document.getElementById("filterSelect").value;
-            const table = document.getElementById("borrowTable");
-            const rows = table.getElementsByTagName("tr");
+            const tableBody = document.getElementById("tableBody");
+            const rows = tableBody.getElementsByTagName("tr");
 
-            for (let i = 1; i < rows.length; i++) {
+            let visibleCount = 0;
+
+            // Remove existing "no data" row if any
+            const oldNoDataRow = document.querySelector(".no-data-row");
+            if (oldNoDataRow) oldNoDataRow.remove();
+
+            for (let i = 0; i < rows.length; i++) {
                 const returnDate = rows[i].cells[6].innerText.trim();
-                const isReturned = !(returnDate === '' || returnDate === '-');
+                const isReturned = !(returnDate === '' || returnDate === '-' || returnDate === 'Late');
 
                 if (
                     filter === "all" ||
@@ -176,13 +187,27 @@ $no = 1;
                     (filter === "current" && !isReturned)
                 ) {
                     rows[i].style.display = "";
+                    visibleCount++;
                 } else {
                     rows[i].style.display = "none";
                 }
             }
+
+            // If no rows are visible, show "no data" row
+            if (visibleCount === 0) {
+                const newRow = document.createElement("tr");
+                newRow.className = "no-data-row";
+
+                const td = document.createElement("td");
+                td.colSpan = 7;
+                td.textContent = "No records found for selected filter.";
+                td.style.textAlign = "center";
+
+                newRow.appendChild(td);
+                tableBody.appendChild(newRow);
+            }
         }
     </script>
-
 </body>
 
 </html>

@@ -111,8 +111,7 @@ $lresult = $stmt3->get_result();
     }
 
     .equipment img {
-      /* width: 100px;
-      height: 100px; */
+
       object-fit: cover;
       background: #eee;
       display: block;
@@ -298,6 +297,20 @@ $lresult = $stmt3->get_result();
 
       <label for="date">Date and time of Activity:</label>
       <input type="datetime-local" id="date" name="activityTime" required>
+      <script>
+        const dateInput = document.getElementById('date');
+        const now = new Date();
+        
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        dateInput.min = minDateTime;
+      </script>
+
       <input type="hidden" name="equipmentId" value="<?php echo htmlspecialchars($equipmentID); ?>">
 
 

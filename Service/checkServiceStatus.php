@@ -6,7 +6,7 @@ if (isset($_GET['serviceID'])) {
     $serviceID = $_GET['serviceID'];
 }
 
-$stmt = $conn->prepare("SELECT sa.*, sl.EquipmentID, e.EquipmentName 
+$stmt = $conn->prepare("SELECT sa.*, sl.*, e.EquipmentName 
                         FROM service_approval sa
                         JOIN servicelog sl ON sa.ServiceID = sl.ServiceID
                         JOIN equipment e ON sl.EquipmentID = e.EquipmentID
@@ -111,7 +111,7 @@ $receivedReturn = $history['ReceivedReturn'];
         .status-item {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .status-label {
@@ -170,6 +170,7 @@ $receivedReturn = $history['ReceivedReturn'];
         }
 
         .status-button {
+            background-color: green;
             padding: 5px 15px;
             color: black;
             border-radius: 4px;
@@ -178,23 +179,72 @@ $receivedReturn = $history['ReceivedReturn'];
             text-align: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             border: none;
+            display: inline-block;
+        }
+
+        .status-click {
+            color: white;
+            font-weight: bold;
         }
 
         .status-approved {
-            background-color: limegreen;
+            color: green;
+            font-weight: bold;
         }
 
         .status-pending {
-            background-color: gray;
+            color: grey;
+            font-weight: bold;
         }
 
         .status-incomplete {
-            background-color: orangered;
+            color: red;
+            font-weight: bold;
         }
 
-        .status-failed {
-            background-color: red;
+        /* Loading Overlay Styling */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner-container {
+            text-align: center;
             color: white;
+            font-size: 20px;
+        }
+
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #ffcc00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        .spinner-text {
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -218,56 +268,47 @@ $receivedReturn = $history['ReceivedReturn'];
 
         <table class="equipment-table">
             <tr>
-                <th>ID</th>
                 <th>Name</th>
+                <th>Description</th>
             </tr>
             <tr>
                 <?php
-                echo "<td>" . htmlspecialchars($row['EquipmentID']) . " </td>";
                 echo "<td>" . htmlspecialchars($row['EquipmentName']) . " </td>";
+                echo "<td>" . htmlspecialchars($row['Description']) . " </td>";
                 ?>
             </tr>
         </table>
 
 
-
         <div class="status-item">
             <div class="status-label">Admin Approval</div>
-            <button
-                class="status-button <?php echo ($adminDecision === 'Approved') ? 'status-approved' : 'status-pending'; ?>"
-                disabled>
+            <label class=" <?php echo ($adminDecision === 'Approved') ? 'status-approved' : 'status-pending'; ?>">
                 <?php echo ($adminDecision === 'Approved') ? 'Approved' : 'Pending'; ?>
-            </button>
+            </label>
         </div>
 
 
         <div class="status-item">
-
             <div class="status-label">Service Request Acceptance</div>
-            <button
-                class="status-button <?php echo ($acceptDate) ? 'status-approved' : 'status-pending'; ?>"
-                disabled>
+            <label class="<?php echo ($acceptDate) ? 'status-approved' : 'status-pending'; ?>">
                 <?php echo ($acceptDate) ? 'Confirmed' : 'Pending'; ?>
-            </button>
+            </label>
             <?php if ($acceptDate): ?>
                 <h4 style="padding-left: 20px;"><?php echo date("Y-m-d H:i", strtotime($acceptDate)); ?></h4>
             <?php endif; ?>
         </div>
 
-        <div class="status-item">
+        <div class="status-item" style="margin-bottom: 40px;">
             <div class="status-label">Pickup Equipment</div>
-            <button
-                class="status-button <?php echo ($actionTaken === 'Done') ? 'status-approved' : 'status-pending'; ?>"
-                disabled>
+            <label class=" <?php echo ($actionTaken === 'Done') ? 'status-approved' : 'status-pending'; ?>">
                 <?php echo ($actionTaken === 'Done') ? 'Done' : 'Pending'; ?>
-            </button>
+            </label>
         </div>
 
         <div class="status-item">
             <div class="status-label">Equipment Service & Repair Status</div>
             <?php
             $repairDisplay = $repairStatus ?? 'Pending';
-
             if ($repairDisplay === 'Completed') {
                 $repairClass = 'status-approved';
             } elseif ($repairDisplay === 'Incomplete') {
@@ -276,9 +317,9 @@ $receivedReturn = $history['ReceivedReturn'];
                 $repairClass = 'status-pending';
             }
             ?>
-            <button class="status-button <?php echo $repairClass; ?>" disabled>
+            <label class=" <?php echo $repairClass; ?>">
                 <?php echo htmlspecialchars($repairDisplay); ?>
-            </button>
+            </label>
         </div>
 
         <?php if ($note): ?>
@@ -288,16 +329,14 @@ $receivedReturn = $history['ReceivedReturn'];
             </div>
         <?php endif; ?>
 
-
-
         <div class="text" style="font-weight: bold;padding-top:8px">Return Equipment:</div>
         <table class="equipment-table">
             <tr>
                 <td>Company Repair</td>
                 <td>
-                    <button class="status-button <?php echo $returnDate ? 'status-approved' : 'status-pending'; ?>" disabled>
+                    <label class=" <?php echo $returnDate ? 'status-approved' : 'status-pending'; ?>">
                         <?php echo $returnDate ? 'Done' : 'Pending'; ?>
-                    </button>
+                    </label>
                 </td>
             </tr>
 
@@ -305,25 +344,23 @@ $receivedReturn = $history['ReceivedReturn'];
                 <td>FTMK</td>
                 <td>
                     <?php if (!$returnDate): ?>
-                        <button class="status-button status-pending" disabled>Pending</button>
+                        <label class=" status-pending">Pending</label>
 
                     <?php elseif ($receivedReturn !== 'Done'): ?>
                         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Technician'): ?>
-                            <form method="POST" action="../Service/receiveReturn.php" onsubmit="return confirm('Confirm received return?');">
+                            <form method="POST" action="../Service/receiveReturn.php" onsubmit="return handleReceiveSubmit();">
                                 <input type="hidden" name="serviceID" value="<?php echo $serviceID; ?>">
-                                <button type="submit" class="status-button status-approved">Received</button>
+                                <button type="submit" class="status-button status-click">Received</button>
                             </form>
                         <?php else: ?>
-                            <button class="status-button status-pending" disabled>Pending</button>
+                            <label class="status-button status-pending">Pending</label>
                         <?php endif; ?>
 
                     <?php else: ?>
-                        <button class="status-button status-approved" disabled>Received</button>
+                        <label class=" status-approved">Received</label>
                     <?php endif; ?>
                 </td>
             </tr>
-
-
         </table>
 
 
@@ -338,7 +375,33 @@ $receivedReturn = $history['ReceivedReturn'];
             }
             return true;
         }
+
+        function showLoading() {
+            const overlay = document.getElementById("loadingOverlay");
+            if (overlay) {
+                overlay.style.display = "flex";
+            }
+        }
+
+        function handleReceiveSubmit() {
+            const confirmed = confirm("Confirm received return?");
+            if (confirmed) {
+                showLoading(); // 显示 loading
+                return true; // 允许提交
+            }
+            return false; // 用户取消则阻止提交
+        }
     </script>
+
+    <!-- Loading Spinner Overlay -->
+    <div id="loadingOverlay" style="display: none;">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <div class="spinner-text">Processing...</div>
+        </div>
+    </div>
+
+
 </body>
 
 </html>

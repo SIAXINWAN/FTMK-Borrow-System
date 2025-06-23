@@ -1,5 +1,11 @@
 <?php
+header('Content-Type: application/json');
+
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
+
 include("../connect.php");
+date_default_timezone_set('Asia/Kuala_Lumpur');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $historyId = $_POST['id'];
@@ -8,13 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 1. Update ReturnDate
     $stmt1 = $conn->prepare("UPDATE borrow_history SET ReturnDate = ? WHERE BorrowID = ?");
     $stmt1->bind_param("si", $returnDate, $historyId);
-    $stmt1->execute();
 
-    if ($stmt1->affected_rows > 0) {
+    if ($stmt1->execute()) {
         $stmt1->close();
 
         // 2. Get EquipmentID and ApplicationID
-        $stmt2 = $conn->prepare("SELECT EquipmentID, ApplicationID FROM borrow_history WHERE BorrowID = ?");
+        $stmt2 = $conn->prepare("SELECT e.EquipmentID, ba.ApplicationID FROM borrow_history bh
+        JOIN borrow_applications ba ON bh.ApplicationID = ba.ApplicationID
+        JOIN equipment e ON e.EquipmentID = ba.EquipmentID
+         WHERE BorrowID = ?");
         $stmt2->bind_param("i", $historyId);
         $stmt2->execute();
         $result2 = $stmt2->get_result();
@@ -63,13 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-            echo "success";
-        } else {
-            echo "error: Equipment info not found.";
-        }
-    } else {
-        echo "error: Return update failed.";
-    }
 
-    $conn->close();
+            echo json_encode(["status" => "success"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Return update failed."]);
+        }
+
+        $conn->close();
+    }
 }

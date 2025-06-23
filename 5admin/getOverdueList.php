@@ -3,10 +3,11 @@ include("../connect.php");
 
 $filter = $_GET['filter'] ?? 'All';
 
-$sql = "SELECT bh.BorrowID, u.Name AS UserName, u.Phone, e.EquipmentName, bh.DueDate, u.Role 
+$sql = "SELECT bh.BorrowID, u.Name AS UserName, u.Phone, e.EquipmentName, bh.DueDate, u.Role ,ba.*
         FROM borrow_history bh
-        JOIN users u ON bh.UserID = u.UserID
-        JOIN equipment e ON bh.EquipmentID = e.EquipmentID
+        JOIN borrow_applications ba ON bh.ApplicationID = ba.ApplicationID
+        JOIN users u ON ba.UserID = u.UserID
+        JOIN equipment e ON ba.EquipmentID = e.EquipmentID
         WHERE bh.ReturnDate IS NULL AND bh.DueDate < CURDATE()";
 
 if ($filter !== 'All') {

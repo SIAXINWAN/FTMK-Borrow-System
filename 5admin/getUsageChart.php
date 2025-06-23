@@ -5,10 +5,11 @@ $role = $_GET['role'] ?? 'All';
 $year = $_GET['year'] ?? 'All';
 $month = $_GET['month'] ?? 'All';
 
-$sql = "SELECT e.EquipmentName, COUNT(*) AS BorrowCount
+$sql = "SELECT e.EquipmentName, COUNT(*) AS BorrowCount,ba.*
         FROM borrow_history bh
-        JOIN equipment e ON bh.EquipmentID = e.EquipmentID
-        JOIN users u ON bh.UserID = u.UserID
+        JOIN borrow_applications ba ON ba.ApplicationID = bh.ApplicationID
+        JOIN equipment e ON ba.EquipmentID = e.EquipmentID
+        JOIN users u ON ba.UserID = u.UserID
         WHERE 1=1";
 
 // Filter: Role

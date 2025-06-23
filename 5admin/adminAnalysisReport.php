@@ -250,7 +250,8 @@
       <select id="yearFilter" onchange="loadUsage()">
         <option value="All">All</option>
         <option value="2025">2025</option>
-        <option value="2024">2024</option>
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
       </select>
       Month:
       <select id="monthFilter" onchange="loadUsage()">
@@ -277,9 +278,9 @@
     <table id="usageTable">
       <thead>
         <tr>
-          <th>No</th>
-          <th>Equipment Name</th>
-          <th>Borrow Count</th>
+          <th style="text-align: center;">No</th>
+          <th style="text-align: center;">Equipment Name</th>
+          <th style="text-align: center;">Borrow Count</th>
         </tr>
       </thead>
       <tbody id="usageBody"></tbody>

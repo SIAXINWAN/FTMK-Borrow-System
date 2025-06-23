@@ -35,11 +35,17 @@
             height: 80px;
         }
 
+        #filterTable {
+            width: 80%;
+            margin: 30px auto 0;
+            text-align: right;
+        }
+
         section table {
             width: 80%;
             margin-left: auto;
             margin-right: auto;
-            margin-top: 50px;
+            margin-top: 20px;
         }
 
         section table th,
@@ -51,7 +57,6 @@
             background-color: rgb(53, 52, 52);
             color: white;
         }
-
 
         section table,
         section th,
@@ -68,7 +73,6 @@
             text-align: center;
             vertical-align: middle;
         }
-
 
         .iconStyle {
             display: flex;
@@ -98,10 +102,20 @@
     <header>
         <a href="technicianMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" height="80px"></a>
         <h1 style="text-align: center;">Equipment Issuance & Return</h1>
-
     </header>
+
+    <table id="filterTable">
+        <td><label for="filter">Filter </label>
+            <select id="filterSelect">
+                <option value="all">All</option>
+                <option value="current">Current</option>
+                <option value="past">Past</option>
+            </select>
+        </td>
+    </table>
+
     <section>
-        <table cellspacing="0">
+        <table id="dataTable" cellspacing="0">
             <thead>
                 <tr>
                     <th>No</th>
@@ -109,16 +123,16 @@
                     <th>Equipment Name</th>
                     <th>Issuance Date</th>
                     <th>Issuance Action</th>
+                    <th>Due Date</th>
                     <th>Return Date</th>
                     <th>Return Action</th>
                 </tr>
             </thead>
-
             <tbody>
                 <?php
                 include("../connect.php");
 
-                $stmt = $conn->prepare("SELECT bh.BorrowID, ba.ApplicationID, u.Name AS BorrowerName, e.EquipmentName, bh.ReturnDate, bh.BorrowDate
+                $stmt = $conn->prepare("SELECT bh.BorrowID, ba.ApplicationID, u.Name AS BorrowerName, e.EquipmentName, bh.ReturnDate, bh.BorrowDate,bh.DueDate
                         FROM borrow_applications ba
                         JOIN users u ON ba.UserID = u.UserID
                         JOIN equipment e ON ba.EquipmentID = e.EquipmentID
@@ -132,107 +146,145 @@
 
                 if ($result && $result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
+                        echo "<tr class='dataRow'>";
                         echo "<td>$no</td>";
                         echo "<td>" . htmlspecialchars($row['BorrowerName']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['EquipmentName']) . "</td>";
 
                         $borrowDate = $row['BorrowDate'];
-                        if ($borrowDate == null || $borrowDate == "") {
-                            echo "<td>-</td>";
-                            echo "<td><button class='buttonStyle issuance' data-id='" . $row['BorrowID'] . "'><i class='fa fa-check iconStyle'></i></button></td>";
-                        } else {
-                            echo "<td>" . date('d/m/Y', strtotime($borrowDate)) . "</td>";
-                            echo "<td></td>";
-                        }
-
+                        $dueDate = $row['DueDate'];
                         $returnDate = $row['ReturnDate'];
-                        if ($borrowDate == null || $borrowDate == "") {
-                            // Not issued yet, no return
+
+                        if (empty($borrowDate)) {
+                            echo "<td>-</td>";
+                            echo "<td><button class='buttonStyle issuance' data-id='{$row['BorrowID']}' data-due='{$row['DueDate']}'><i class='fa fa-check iconStyle'></i></button></td>";
+                            echo "<td>" . (!empty($dueDate) ? date('d/m/Y', strtotime($dueDate)) : '-') . "</td>";
                             echo "<td>-</td><td>-</td>";
                         } else {
-                            if ($returnDate == null || $returnDate == "") {
-                                echo "<td>-</td><td><button class='buttonStyle returnAction' data-id='" . $row['BorrowID'] . "'><i class='fa fa-check iconStyle'></i></button></td>";
+                            echo "<td>" . date('d/m/Y', strtotime($borrowDate)) . "</td><td></td>";
+                            echo "<td>" . (!empty($dueDate) ? date('d/m/Y', strtotime($dueDate)) : '-') . "</td>";
+
+                            $today = date("Y-m-d");
+                            if (empty($returnDate) || $returnDate === "0000-00-00") {
+                                if (!empty($dueDate) && $today > $dueDate) {
+                                    echo "<td><span style='color: red; font-weight: bold;'>Late</span></td>";
+                                } else {
+                                    echo "<td>-</td>";
+                                }
+                                echo "<td><button class='buttonStyle returnAction' data-id='{$row['BorrowID']}'><i class='fa fa-check iconStyle'></i></button></td>";
                             } else {
-                                echo "<td>" . date('d/m/Y', strtotime($returnDate)) . "</td><td></td>";
+                                $formatted = date('d/m/Y', strtotime($returnDate));
+                                if ($returnDate > $dueDate) {
+                                    echo "<td><span style='color: red; font-weight: bold;'>$formatted</span></td><td></td>";
+                                } else {
+                                    echo "<td>$formatted</td><td></td>";
+                                }
                             }
                         }
-
                         echo "</tr>";
                         $no++;
                     }
                 } else {
-                    echo "<tr><td colspan='7'>No approved applications found.</td></tr>";
+                    echo "<tr><td colspan='8'>No approved applications found.</td></tr>";
                 }
                 ?>
-
-
             </tbody>
         </table>
     </section>
 
     <script>
         $(document).ready(function() {
-            $(".issuance").click(function() {
+            $(document).on('click', ".issuance", function() {
                 var button = $(this);
                 var row = button.closest("tr");
+                var dueDateRaw = button.data("due"); // Format: yyyy-mm-dd
+                var todayFormatted = todayDate(); // dd/mm/yyyy
                 var confirmIssuance = window.confirm("Are you sure you issued the equipment?");
+
                 if (confirmIssuance) {
                     $.post("updateIssuanceDate.php", {
                         id: button.data("id")
                     }, function(response) {
-                        if (response.trim() === "success") {
+                        let res = JSON.parse(response);
+                        if (res.status === "success") {
                             alert("Issuance date updated successfully!");
 
-                            var today = todayDate();
-                            row.find("td:eq(3)").text(today);
-                            row.find("td:eq(4)").html("");
+                            // Format dates
+                            const format = (dateStr) => {
+                                let [y, m, d] = dateStr.split("-");
+                                return `${d}/${m}/${y}`;
+                            };
 
-                            var borrowID = button.data("id");
-                            var returnBtn = `
-                    <button class='buttonStyle returnAction' data-id='${borrowID}'>
-                        <i class='fa fa-check iconStyle'></i>
-                    </button>
-                `;
-                            row.find("td:eq(5)").text("-");
-                            row.find("td:eq(6)").html(returnBtn);
-
+                            row.find("td:eq(3)").text(format(res.borrowDate)); // Issuance Date
+                            row.find("td:eq(4)").html(""); // Clear button
+                            row.find("td:eq(5)").text(format(res.dueDate)); // Due Date
+                            row.find("td:eq(6)").text("-"); // Return Date
+                            row.find("td:eq(7)").html(`
+            <button class='buttonStyle returnAction' data-id='${button.data("id")}' data-due='${res.dueDate}'>
+                <i class='fa fa-check iconStyle'></i>
+            </button>
+        `);
                         } else {
-                            alert("Failed to update issuance date.");
+                            alert("Failed to update issuance date: " + (res.message || ""));
                         }
                     });
+
+                }
+            });
+
+            $(document).on("click", ".returnAction", function() {
+                var button = $(this);
+                var row = button.closest("tr")[0];
+                var today = todayDate();
+                var todayRaw = new Date().toISOString().split('T')[0]; // yyyy-mm-dd
+                var dueRaw = button.data("due"); // yyyy-mm-dd
+
+                let isLate = false;
+                if (dueRaw && todayRaw > dueRaw) {
+                    isLate = true;
+                }
+
+                if (confirm("Are you sure the equipment has been returned?")) {
+                    row.cells[6].innerHTML = isLate ?
+                        `<span style='color: red; font-weight: bold;'>${today}</span>` :
+                        today;
+                    row.cells[7].innerHTML = "";
+
+                    $.post("updateReturnDate.php", {
+                        id: button.data("id")
+                    }, function(res) {
+                        if (res.status === "success") {
+                            alert("Return date updated successfully!");
+                        } else {
+                            alert("Failed to update return date: " + (res.message || ""));
+                        }
+                    }, 'json'); // 👈 important! 明确告诉 jQuery 这是 JSON
+
                 }
             });
 
 
-            $(document).on('click', '.returnAction', function() {
-                var confirmReturn = confirm("Are you sure the equipment has been returned?");
-                if (confirmReturn) {
-                    var row = $(this).closest("tr")[0];
-                    var today = todayDate();
-                    row.cells[5].textContent = today;
-                    row.cells[6].textContent = "";
-
-                    var historyId = $(this).data('id');
-                    $.post("updateReturnDate.php", {
-                        id: historyId
-                    }, function(response) {
-                        if (response.trim() === "success") {
-                            alert("Return date updated successfully!");
-                        } else {
-                            alert("Failed to update return date.");
-                        }
-                    });
-                }
+            $('#filterSelect').on('change', function() {
+                var val = this.value;
+                $('#dataTable .dataRow').each(function() {
+                    var returnDateText = $(this).find('td:eq(6)').text().trim();
+                    if (val === 'all') {
+                        $(this).show();
+                    } else if (val === 'current') {
+                        $(this).toggle(returnDateText === '-' || returnDateText === 'Late');
+                    } else if (val === 'past') {
+                        $(this).toggle(returnDateText !== '-' && returnDateText !== 'Late');
+                    }
+                });
             });
         });
 
         function todayDate() {
             var date = new Date();
-            var day = date.getDate();
-            var month = date.getMonth() + 1;
+            var day = String(date.getDate()).padStart(2, '0');
+            var month = String(date.getMonth() + 1).padStart(2, '0');
             var year = date.getFullYear();
-            return (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + year;
+            return `${day}/${month}/${year}`;
         }
     </script>
 </body>

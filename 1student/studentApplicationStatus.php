@@ -184,13 +184,13 @@ while ($row = $approvalResult->fetch_assoc()) {
 
     <table class="equipment-table">
       <tr>
-        <th>ID</th>
         <th>Name</th>
+        <th>Purpose</th>
       </tr>
       <tr>
       <tr>
-        <td><?php echo htmlspecialchars($appRow['EquipmentID']); ?></td>
         <td><?php echo htmlspecialchars($appRow['EquipmentName']); ?></td>
+        <td><?php echo htmlspecialchars($appRow['Purpose']); ?></td>
       </tr>
 
       </tr>

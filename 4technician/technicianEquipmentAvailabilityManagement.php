@@ -106,6 +106,51 @@ unset($_SESSION['success']);
         .logo {
             height: 80px;
         }
+
+        /* Loading Overlay Styling */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner-container {
+            text-align: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #ffcc00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        .spinner-text {
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
@@ -125,11 +170,8 @@ unset($_SESSION['success']);
         </select>
     </div>
 
-    <?php if (!empty($success)): ?>
-        <div style="color: green; text-align: center; margin-bottom: 15px;">
-            <?= htmlspecialchars($success) ?>
-        </div>
-    <?php endif; ?>
+
+
 
     <table>
         <thead>
@@ -212,25 +254,44 @@ unset($_SESSION['success']);
                     `Are you sure you want to set ${name} ${model} to Available?`;
 
                 if (confirm(confirmText)) {
-                    $.post("../Equipment/changeStatus.php", {
-                        id: id,
-                        status: newStatus
-                    }, function(res) {
-                        if (res === "success") {
-                            const newText = newStatus === 1 ? "Available" : "Not Available";
-                            const newColor = newStatus === 1 ? "#58FF05" : "red";
-                            h3.text(newText).css("color", newColor);
-                        } else {
-                            alert("Failed to update status.");
-                        }
-                    });
+                    const reason = prompt("Please provide a reason for this status change:");
+                    if (reason && reason.trim() !== "") {
+                        $("#loadingOverlay").show(); // 显示 loading
+
+                        $.post("../Equipment/changeStatus.php", {
+                            id: id,
+                            status: newStatus,
+                            reason: reason
+                        }, function(res) {
+                            if (res.trim() === "success") {
+                                alert("Availability Status Update Successfully!")
+                                const newText = newStatus === 1 ? "Available" : "Not Available";
+                                const newColor = newStatus === 1 ? "#58FF05" : "red";
+                                h3.text(newText).css("color", newColor);
+                            } else {
+                                alert("Failed to update status.");
+                            }
+                            $("#loadingOverlay").hide(); // 隐藏 loading
+                        });
+                    } else {
+                        alert("Status change cancelled: reason is required.");
+                    }
                 }
             });
+
+
 
 
             numbering();
         });
     </script>
+    <!-- Loading Spinner Overlay -->
+    <div id="loadingOverlay" style="display: none;">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <div class="spinner-text">Processing...</div>
+        </div>
+    </div>
 
 </body>
 

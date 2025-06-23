@@ -41,6 +41,7 @@ if (isset($_SESSION['UserID'])) {
         // ✅ 如果密码存在，验证输入
         if (password_verify($input_password, $user['Password'])) {
             $_SESSION['role'] = $user['Role'];
+            $_SESSION['Email'] = $user['Email'];
 
             switch ($user['Role']) {
                 case 'Student':

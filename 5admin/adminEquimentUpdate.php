@@ -136,7 +136,7 @@ $row = $result->fetch_assoc();
 <body>
   <header>
 
-    <a href="adminMainPage.php"><img src="../0images/ftmkLogo_Yellow.png" class="logo" /></a>
+    <a href="adminEquipmentInventory.php"><img src="../0images/ftmkLogo_Yellow.png" class="logo" /></a>
 
     <h1 style="text-align: center">Equipment Update</h1>
 

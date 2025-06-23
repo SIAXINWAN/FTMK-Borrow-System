@@ -110,8 +110,7 @@ unset($_SESSION['error']);
     }
 
     .equipment img {
-      width: 100px;
-      height: 100px;
+      
       object-fit: cover;
       background: #eee;
       display: block;
@@ -153,6 +152,50 @@ unset($_SESSION['error']);
     .clear-btn {
       background: #ccc;
     }
+
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spinner-container {
+      text-align: center;
+      color: white;
+      font-size: 20px;
+    }
+
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #ffcc00;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 15px;
+      animation: spin 1s linear infinite;
+    }
+
+    .spinner-text {
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 </head>
 
@@ -172,6 +215,18 @@ unset($_SESSION['error']);
 
   <div class="form-container">
     <form action="submitServiceRequest.php?id=<?php echo htmlspecialchars($equipmentID); ?>" method="post" onsubmit="return validateForm()">
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          const form = document.querySelector("form");
+          if (form) {
+            form.addEventListener("submit", function() {
+              // Show the spinner when form is submitted
+              document.getElementById("loadingOverlay").style.display = "flex";
+            });
+          }
+        });
+      </script>
+
       <h2>Applicant's Information</h2>
       <div class="form-section">
         <div class="form-group">
@@ -275,6 +330,15 @@ unset($_SESSION['error']);
       </script>
     </form>
   </div>
+
+  <!-- Loading Spinner Overlay -->
+  <div id="loadingOverlay" style="display: none;">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <div class="spinner-text">Processing...</div>
+    </div>
+  </div>
+
 </body>
 
 </html>

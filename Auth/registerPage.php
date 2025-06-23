@@ -37,7 +37,7 @@
     }
 
     .input-grid input {
-      width: 270px;
+      width: 280px;
       box-sizing: border-box;
       height: 40px;
       font-size: 16px;

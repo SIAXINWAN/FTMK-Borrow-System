@@ -54,10 +54,10 @@ if ($stmt->execute()) {
         $checkQty->close();
 
 
-        $adminResult = $conn->query("SELECT Email FROM users WHERE Role = 'Admin'");
+        $adminResult = $conn->query("SELECT Name, Email FROM users WHERE Role = 'Admin'");
         while ($admin = $adminResult->fetch_assoc()) {
             $adminEmail = $admin['Email'];
-            $adminName = $admin['Name'];
+            $adminName = $admin['Name']; // 现在这行就会有值了
 
             $subject = "New Service Request Pending Your Approval";
             $body = "
@@ -72,7 +72,8 @@ University Teknikal Malaysia Melaka (UTeM)<br>";
             sendNotification($adminEmail, $subject, $body);
         }
 
-        $_SESSION['success'] = "Service request submitted successfully!";
+
+
         header("Location: technicianServiceStatus.php?serviceID=$serviceID");
         exit;
     } else {

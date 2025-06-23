@@ -186,6 +186,12 @@ $result = $stmt->get_result();
                 transform: rotate(360deg);
             }
         }
+
+        .no-data-row td {
+            font-style: italic;
+            color: #555;
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 
@@ -250,7 +256,7 @@ $result = $stmt->get_result();
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='7'>No pending applications.</td></tr>";
+                    echo "<tr class='no-data-row'><td colspan='7'>No pending applications.</td></tr>";
                 }
                 ?>
             </tbody>
@@ -285,7 +291,7 @@ $result = $stmt->get_result();
                         appId: appId
                     }, function(response) {
                         hideLoading();
-                        if (response === "success") {
+                        if (response.trim() === "success") {
                             alert("Successfully approved and email notification sent.");
                             tr.remove();
                             renumber();
@@ -316,7 +322,7 @@ $result = $stmt->get_result();
                     remarks: reason
                 }, function(response) {
                     hideLoading();
-                    if (response === "success") {
+                    if (response.trim() === "success") {
                         alert("Application rejected and student has been notified.");
                         tr.remove();
                         renumber();

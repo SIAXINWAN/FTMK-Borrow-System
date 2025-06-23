@@ -130,6 +130,57 @@ $no = 1;
     .buttonBox {
       display: flex;
     }
+
+    /* Loading Overlay Styling */
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spinner-container {
+      text-align: center;
+      color: white;
+      font-size: 20px;
+    }
+
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #ffcc00;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 15px;
+      animation: spin 1s linear infinite;
+    }
+
+    .spinner-text {
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .no-data-row td {
+      font-style: italic;
+      color: #555;
+      background-color: #f0f0f0;
+    }
   </style>
 </head>
 
@@ -155,14 +206,15 @@ $no = 1;
       </thead>
       <tbody>
         <?php
-        while ($row = $result->fetch_assoc()) {
-          echo "<tr>";
-          echo "<td>" . $no++ . "</td>";
-          echo "<td>" . htmlspecialchars($row['EquipmentName']) . "</td>";
-          echo "<td>" . htmlspecialchars($row['TechnicianName']) . "</td>";
-          echo "<td>" . htmlspecialchars($row['CompanyName']) . "</td>";
-          echo "<td>" . htmlspecialchars($row['Description']) . "</td>";
-          echo "<td>
+        if ($result && $result->num_rows > 0) {
+          while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>" . $no++ . "</td>";
+            echo "<td>" . htmlspecialchars($row['EquipmentName']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['TechnicianName']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['CompanyName']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['Description']) . "</td>";
+            echo "<td>
   <div class='buttonBox'>
     <button class='buttonStyle approveBtn' data-approval-id='{$row['ApprovalID']}'>
       <i class='fa fa-check iconStyle tick'></i>
@@ -174,7 +226,10 @@ $no = 1;
 </td>";
 
 
-          echo "</tr>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr class='no-data-row'><td colspan='7'>No pending applications.</td></tr>";
         }
 
         ?>
@@ -187,15 +242,25 @@ $no = 1;
     $(document).ready(function() {
       const approverId = "<?php echo $_SESSION['UserID']; ?>";
 
+      function showLoading() {
+        $("#loadingOverlay").fadeIn(200);
+      }
+
+      function hideLoading() {
+        $("#loadingOverlay").fadeOut(200);
+      }
+
       $(".approveBtn").click(function() {
         const approvalId = $(this).data("approval-id");
 
         if (confirm("Are you sure you want to APPROVE this service request?")) {
+          showLoading();
           $.post("processApproval.php", {
             approvalId: approvalId,
             decision: "Approved",
             approverId: approverId
           }, function(response) {
+            hideLoading();
             if (response === "success") {
               alert("Approved successfully.");
               location.reload();
@@ -211,12 +276,14 @@ $no = 1;
 
         const remarks = prompt("Please provide a reason for REJECTION:");
         if (remarks !== null && remarks.trim() !== "") {
+          showLoading();
           $.post("processApproval.php", {
             approvalId: approvalId,
             decision: "Rejected",
             approverId: approverId,
             remarks: remarks
           }, function(response) {
+            hideLoading();
             if (response === "success") {
               alert("Rejected successfully.");
               location.reload();
@@ -230,6 +297,13 @@ $no = 1;
       });
     });
   </script>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <div class="spinner-text">Processing...</div>
+    </div>
+  </div>
+
 
 </body>
 

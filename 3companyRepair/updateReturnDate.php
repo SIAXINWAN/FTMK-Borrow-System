@@ -1,6 +1,8 @@
 <?php
+session_start();
 include("../connect.php");
-include("../Notification/sendEmail.php"); // 确保包含 sendNotification 函数
+include("../Notification/sendEmail.php"); 
+date_default_timezone_set("Asia/Kuala_Lumpur");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $serviceID = $_POST["serviceID"];
@@ -29,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $formattedDate = date("F j, Y \\a\\t g:i A", strtotime($returnDate));
 
-            // Email 内容
             $subject = "Equipment Returned Notification";
             $body = "
             Dear $technicianName,<br><br>
@@ -40,15 +41,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             Best regards,<br>
             FTMK Borrow System<br>
             University Teknikal Malaysia Melaka (UTeM)<br>";
-
             sendNotification($technicianEmail, $subject, $body);
         }
 
         $stmt2->close();
-        header("Location: companyRepairServiceStatus.php?serviceID=$serviceID");
+
+        echo "<script>
+            alert('Return date updated successfully!');
+            window.location.href = 'companyRepairServiceStatus.php?serviceID=$serviceID';
+        </script>";
         exit;
     } else {
-        echo "Error updating ReturnDate: " . $stmt->error;
+        echo "<script>
+            alert('Error updating return date: " . $stmt->error . "');
+            window.history.back();
+        </script>";
     }
 
     $stmt->close();

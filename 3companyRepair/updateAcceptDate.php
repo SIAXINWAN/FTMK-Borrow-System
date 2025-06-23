@@ -1,4 +1,5 @@
 <?php
+session_start();
 include("../connect.php");
 include("../Notification/sendEmail.php");
 date_default_timezone_set("Asia/Kuala_Lumpur");
@@ -45,10 +46,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $stmt2->close();
-        header("Location: companyRepairServiceStatus.php?serviceID=$serviceID");
+
+        echo "<script>
+            alert('Accept date updated successfully!');
+            window.location.href = 'companyRepairServiceStatus.php?serviceID=$serviceID';
+        </script>";
         exit;
     } else {
-        echo "Error updating AcceptDate: " . $stmt->error;
+        echo "<script>
+            alert('Error updating accept date: " . $stmt->error . "');
+            window.history.back();
+        </script>";
     }
 
     $stmt->close();

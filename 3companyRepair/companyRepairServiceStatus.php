@@ -133,6 +133,60 @@ if (isset($_GET['serviceID'])) {
       font-size: 18px;
       margin: 20px 0 10px;
     }
+
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spinner-container {
+      text-align: center;
+      color: white;
+      font-size: 20px;
+    }
+
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #ffcc00;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 15px;
+      animation: spin 1s linear infinite;
+    }
+
+    .spinner-text {
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .green-text {
+      color: green;
+      font-weight: bold;
+    }
+
+    .red-text {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -148,12 +202,12 @@ if (isset($_GET['serviceID'])) {
     <div class="text">Equipment Details:</div>
     <table class="equipment-table">
       <tr>
-        <th>ID</th>
         <th>Name</th>
+        <th>Description</th>
       </tr>
       <tr>
-        <td><?php echo $data['EquipmentID']; ?></td>
         <td><?php echo $data['EquipmentName']; ?></td>
+        <td><?php echo $data['Description']; ?></td>
       </tr>
     </table>
 
@@ -161,12 +215,31 @@ if (isset($_GET['serviceID'])) {
       <div class="status-label">Service Request Acceptance</div>
       <?php if (!$acceptDate): ?>
         <form method="POST" action="updateAcceptDate.php">
-          <input type="datetime-local" name="acceptDate" required style="margin-right: 10px;">
+          <input type="datetime-local" id="date" name="acceptDate" required style="margin-right: 10px;">
+
+          <script>
+            const dateInput = document.getElementById('date');
+            const now = new Date();
+
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+
+            const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            dateInput.min = minDateTime;
+          </script>
           <input type="hidden" name="serviceID" value="<?php echo $serviceID; ?>">
-          <button type="submit" onclick="return confirm('Confirm accept date?');" class="status-button status-approved">Confirm</button>
+          <button type="submit" class="status-button status-approved">Confirm</button>
+
+
         </form>
       <?php else: ?>
-        <button class="status-button status-approved" disabled>Confirmed</button>
+        <label class="green-text">Confirmed</label>
+
+
+
 
       <?php endif; ?>
     </div>
@@ -181,7 +254,8 @@ if (isset($_GET['serviceID'])) {
             <button type="submit" onclick="return confirm('Confirm pickup done?');" class="status-button status-approved">Done</button>
           </form>
         <?php else: ?>
-          <button class="status-button status-approved" disabled>Done</button>
+          <label class="green-text">Done</label>
+
         <?php endif; ?>
       <?php else: ?>
         <button class="status-button status-pending" disabled>Pending Accept</button>
@@ -260,9 +334,13 @@ if (isset($_GET['serviceID'])) {
         <?php elseif ($status && $status !== 'Pending'): ?>
           <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
             <div class="status-label">Equipment Service & Repair Status</div>
-            <button class="status-button <?php echo $status === 'Completed' ? 'status-approved' : 'status-failed'; ?>" disabled>
+            <?php
+            $labelClass = ($status === 'Completed') ? 'green-text' : 'red-text';
+            ?>
+            <label class="<?php echo $labelClass; ?>" style="font-weight: bold;">
               <?php echo htmlspecialchars($status); ?>
-            </button>
+            </label>
+
           </div>
 
           <div class="text" style="margin-top: 15px;">Notes:</div>
@@ -290,10 +368,12 @@ if (isset($_GET['serviceID'])) {
           <?php if ($status !== 'Pending' && !$returnDate): ?>
             <form method="POST" action="updateReturnDate.php">
               <input type="hidden" name="serviceID" value="<?php echo $serviceID; ?>">
-              <button type="submit" onclick="return confirm('Confirm return equipment?');" class="status-button status-approved">Done</button>
+              <button type="submit" class="status-button status-approved">Done</button>
+
             </form>
           <?php elseif ($returnDate): ?>
-            <button class="status-button status-approved" disabled>Done</button>
+            <label class="green-text">Done</label>
+
           <?php else: ?>
             <button class="status-button status-pending" disabled>Pending</button>
           <?php endif; ?>
@@ -310,6 +390,38 @@ if (isset($_GET['serviceID'])) {
       </tr>
     </table>
   </div>
+  <!-- Loading Spinner Overlay -->
+  <div id="loadingOverlay" style="display: none;">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <div class="spinner-text">Processing...</div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const targetForms = ["updateAcceptDate.php", "updateReturnDate.php"]; // 只处理这两个表单
+
+      document.querySelectorAll("form").forEach(form => {
+        form.addEventListener("submit", function(e) {
+          const action = form.getAttribute("action");
+          if (targetForms.includes(action)) {
+            const confirmed = confirm("Are you sure to proceed?");
+            if (!confirmed) {
+              e.preventDefault(); // 用户按“取消”时不提交
+              return;
+            }
+            showLoading(); // 用户确认后才 show loading
+          }
+        });
+      });
+    });
+
+    function showLoading() {
+      document.getElementById("loadingOverlay").style.display = "flex";
+    }
+  </script>
+
+
 </body>
 
 </html>

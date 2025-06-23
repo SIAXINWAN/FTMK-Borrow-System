@@ -53,9 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$exists) {
             $stmt = $conn->prepare("INSERT INTO borrow_history 
-                (ApplicationID, EquipmentID, UserID, BorrowDate, DueDate, ReturnDate) 
-                VALUES (?, ?, ?, NULL, NULL, NULL)");
-            $stmt->bind_param("iss", $applicationId, $equipmentId, $userId);
+                (ApplicationID, BorrowDate, DueDate, ReturnDate) 
+                VALUES (?, NULL, NULL, NULL)");
+            $stmt->bind_param("i", $applicationId);
             $stmt->execute();
             $stmt->close();
         }
