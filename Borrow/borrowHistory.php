@@ -2,7 +2,7 @@
 session_start();
 include("../connect.php");
 
-$sql = "SELECT u.*, e.EquipmentName, s.* ,ba.*
+$sql = "SELECT u.*, e.EquipmentName, e.ModelNumber, s.Name, s.Role, ba.*
         FROM borrow_history u
         JOIN borrow_applications ba ON u.ApplicationID = ba.ApplicationID
         JOIN equipment e ON ba.EquipmentID = e.EquipmentID
@@ -12,10 +12,9 @@ $sql = "SELECT u.*, e.EquipmentName, s.* ,ba.*
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $result = $stmt->get_result();
-
+$rows = $result->fetch_all(MYSQLI_ASSOC);
 $no = 1;
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,7 +50,7 @@ $no = 1;
         }
 
         table {
-            width: 80%;
+            width: 90%;
             margin: auto;
         }
 
@@ -60,7 +59,7 @@ $no = 1;
         .borrowTable td {
             border: 1px solid black;
             border-collapse: collapse;
-            padding: 15px;
+            padding: 10px;
             text-align: center;
         }
 
@@ -71,17 +70,23 @@ $no = 1;
 
         .filterTable {
             text-align: right;
-        }
-
-        #filter {
-            padding-top: 50px;
-            padding-bottom: 20px;
+            margin: 20px auto;
+            width: 90%;
         }
 
         .no-data-row td {
             font-style: italic;
             background-color: #f9f9f9;
             color: #555;
+        }
+
+        .pickup-alert {
+            color: green;
+            font-weight: bold;
+            background-color: #e6ffe6;
+            padding: 5px 10px;
+            border-radius: 8px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -108,20 +113,17 @@ $no = 1;
         <h1>Borrow History</h1>
     </header>
 
-    <div id="filter">
-        <table id="filterTable" class="filterTable">
-            <td><label for="filter">Filter </label>
-                <select id="filterSelect" onchange="filterTable()">
-                    <option value="all">All</option>
-                    <option value="current">Current</option>
-                    <option value="past">Past</option>
-                </select>
-            </td>
-        </table>
+    <div class="filterTable">
+        <label for="filterSelect">Filter </label>
+        <select id="filterSelect" onchange="filterTable()">
+            <option value="all">All</option>
+            <option value="current">Current</option>
+            <option value="past">Past</option>
+        </select>
     </div>
 
-    <div id="borrow">
-        <table id="borrowTable" class="borrowTable">
+    <div>
+        <table class="borrowTable">
             <thead>
                 <tr>
                     <th>No</th>
@@ -134,32 +136,46 @@ $no = 1;
                 </tr>
             </thead>
             <tbody id="tableBody">
-                <?php while ($row = $result->fetch_assoc()) { ?>
-                    <tr>
-                        <td><?php echo $no++; ?></td>
-                        <td><?php echo htmlspecialchars($row['Name']); ?></td>
-                        <td><?php echo htmlspecialchars($row['Role']); ?></td>
-                        <td><?php echo htmlspecialchars($row['EquipmentName']); ?></td>
-                        <td><?php echo $row['BorrowDate'] ? htmlspecialchars($row['BorrowDate']) : '-'; ?></td>
-                        <td><?php echo $row['DueDate'] ? htmlspecialchars($row['DueDate']) : '-'; ?></td>
-                        <td>
-                            <?php
-                            $today = date("Y-m-d");
-                            $dueDate = $row['DueDate'];
-                            $returnDate = $row['ReturnDate'];
-
-                            if (empty($returnDate) || $returnDate === '0000-00-00') {
-                                if ($today > $dueDate && !empty($dueDate)) {
-                                    echo "<span style='color: red; font-weight: bold;'>Late</span>";
-                                } else {
-                                    echo "-";
-                                }
-                            } else {
-                                echo htmlspecialchars($returnDate);
-                            }
-                            ?>
-                        </td>
+                <?php if (empty($rows)) { ?>
+                    <tr class="no-data-row">
+                        <td colspan="7">No borrow records found.</td>
                     </tr>
+                <?php } else { ?>
+                    <?php foreach ($rows as $row) { ?>
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td><?php echo htmlspecialchars($row['Name']); ?></td>
+                            <td><?php echo htmlspecialchars($row['Role']); ?></td>
+                            <td><?php echo htmlspecialchars($row['EquipmentName']); ?></td>
+                            <td>
+                                <?php
+                                if ($row['BorrowDate']) {
+                                    echo htmlspecialchars($row['BorrowDate']);
+                                } else {
+                                    echo "<span class='pickup-alert'>Ready for pickup</span>";
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo $row['DueDate'] ? htmlspecialchars($row['DueDate']) : '-'; ?></td>
+                            <td>
+                                <?php
+                                $today = date("Y-m-d");
+                                $dueDate = $row['DueDate'];
+                                $returnDate = $row['ReturnDate'];
+
+                                if (empty($returnDate) || $returnDate === '0000-00-00') {
+                                    if ($today > $dueDate && !empty($dueDate)) {
+                                        echo "<span style='color: red; font-weight: bold;'>Late</span>";
+                                    } else {
+                                        echo "-";
+                                    }
+                                } else {
+                                    echo htmlspecialchars($returnDate);
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
                 <?php } ?>
             </tbody>
         </table>
@@ -173,7 +189,6 @@ $no = 1;
 
             let visibleCount = 0;
 
-            // Remove existing "no data" row if any
             const oldNoDataRow = document.querySelector(".no-data-row");
             if (oldNoDataRow) oldNoDataRow.remove();
 
@@ -193,7 +208,6 @@ $no = 1;
                 }
             }
 
-            // If no rows are visible, show "no data" row
             if (visibleCount === 0) {
                 const newRow = document.createElement("tr");
                 newRow.className = "no-data-row";

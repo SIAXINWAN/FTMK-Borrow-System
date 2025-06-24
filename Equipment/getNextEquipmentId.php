@@ -4,7 +4,6 @@ include("../connect.php");
 if (isset($_GET['type'])) {
     $type = $_GET['type'];
 
-    // 映射 type 到缩写前缀
     $prefixMap = [
         "Camera" => "EC",
         "Camera Accessory" => "ECA",
@@ -21,7 +20,6 @@ if (isset($_GET['type'])) {
         exit;
     }
 
-    // 查询：prefix 后面跟 3 位数字，避免混入 ECA / EC 等冲突
     $stmt = $conn->prepare("SELECT EquipmentID FROM equipment 
                             WHERE EquipmentID REGEXP CONCAT('^', ?, '[0-9]{3}$') 
                             ORDER BY EquipmentID DESC LIMIT 1");

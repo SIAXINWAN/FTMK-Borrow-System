@@ -108,7 +108,6 @@ if ($insertAppStmt->execute()) {
     if ($approvalSuccess) {
 
         if ($role === 'Student') {
-            // 获取 lecturer 信息（从 dummy）
             $dummyStmt = $conn->prepare("SELECT Name, Email FROM dummy WHERE UserID = ?");
             $dummyStmt->bind_param("s", $lecturerId);
             $dummyStmt->execute();
@@ -118,16 +117,14 @@ if ($insertAppStmt->execute()) {
             $lecturerEmail = $dummyRow['Email'] ?? '';
             $dummyStmt->close();
 
-            // 检查 users 表中是否有设置 Password（是否注册）
             $userCheckStmt = $conn->prepare("SELECT Password FROM users WHERE UserID = ?");
             $userCheckStmt->bind_param("s", $lecturerId);
             $userCheckStmt->execute();
             $userCheckResult = $userCheckStmt->get_result();
             $userCheckRow = $userCheckResult->fetch_assoc();
-            $hasPassword = !empty($userCheckRow['Password']); // true = 已注册
+            $hasPassword = !empty($userCheckRow['Password']); 
             $userCheckStmt->close();
 
-            // 发 email 通知
             if ($lecturerEmail) {
                 if ($hasPassword) {
                     $subject = "New Borrow Application From Your Student";
@@ -135,7 +132,10 @@ if ($insertAppStmt->execute()) {
                     Dear $lecturerName,<br><br>
                     You have received a new equipment borrow application from your student.<br>
                     Please log in to the <b><a href='https://webapp.utem.edu.my/student/dit/jcats/FTMK-Borrow-System/' target='_blank'>FTMK Borrow System</a></b> as soon as possible and check your student's application.<br><br>
-                    Thank you.
+                    Thank you.<br><br>
+                    Best regards,<br>
+                    FTMK Borrow System<br>
+                    University Teknikal Malaysia Melaka (UTeM)<br>
                 ";
                 } else {
                     $subject = "Action Required: Register to Approve Borrow Application";
@@ -154,7 +154,7 @@ if ($insertAppStmt->execute()) {
                 sendNotification($lecturerEmail, $subject, $body);
             }
         } else {
-            // Non-student (lecturer/others)，通知 admin
+            
             $adminQuery = "SELECT Email, Name FROM users WHERE Role = 'Admin'";
             $adminResult = $conn->query($adminQuery);
             while ($adminRow = $adminResult->fetch_assoc()) {

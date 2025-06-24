@@ -331,7 +331,6 @@ unset($_SESSION['error']);
     </form>
   </div>
 
-  <!-- Loading Spinner Overlay -->
   <div id="loadingOverlay" style="display: none;">
     <div class="spinner-container">
       <div class="spinner"></div>

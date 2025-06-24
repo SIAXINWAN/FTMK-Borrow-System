@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $stmt3->close();
 
-            // ✅ Step 1: 查 "归还之前" 的状态
             $stmtCheck = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
             $stmtCheck->bind_param("s", $equipmentId);
             $stmtCheck->execute();
@@ -55,13 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $beforeStatus = (int)$equipment['AvailabilityStatus'];
             $stmtCheck->close();
 
-            // ✅ Step 2: 先加回 Quantity
             $stmtUpdate = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
             $stmtUpdate->bind_param("is", $borrowQty, $equipmentId);
             $stmtUpdate->execute();
             $stmtUpdate->close();
 
-            // ✅ Step 3: 判断是否需要恢复 status
             if ($beforeQty === 0 && $beforeStatus === 0) {
                 $stmtStatus = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 1 WHERE EquipmentID = ?");
                 $stmtStatus->bind_param("s", $equipmentId);

@@ -2,13 +2,11 @@
 session_start();
 include('../connect.php');
 
-// 确保只有 POST 方式访问
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ../index.php");
     exit();
 }
 
-// 存储 UserID 进 session
 if (!isset($_SESSION['UserID']) && isset($_POST['UserID'])) {
     $_SESSION['UserID'] = $_POST['UserID'];
 }
@@ -25,7 +23,6 @@ if (isset($_SESSION['UserID'])) {
     if ($result && $result->num_rows == 1) {
         $user = $result->fetch_assoc();
 
-        // ✅ 新增：检查是否未注册（Password 是 NULL 或空字符串）
         if (empty($user['Password'])) {
             session_unset();
             echo "<div style='text-align: center; padding-top: 100px;'>";
@@ -38,7 +35,6 @@ if (isset($_SESSION['UserID'])) {
             exit();
         }
 
-        // ✅ 如果密码存在，验证输入
         if (password_verify($input_password, $user['Password'])) {
             $_SESSION['role'] = $user['Role'];
             $_SESSION['Email'] = $user['Email'];

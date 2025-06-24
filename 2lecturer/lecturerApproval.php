@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $equipmentId = $qtyRow['EquipmentID'];
                 $quantity = $qtyRow['Quantity'];
 
-                // ✅ 先在还回去之前获取原始状态
+                //check quantity before first
                 $stmtCheckBefore = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
                 $stmtCheckBefore->bind_param("s", $equipmentId);
                 $stmtCheckBefore->execute();
@@ -91,13 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $beforeStatus = (int) $beforeData['AvailabilityStatus'];
                 $stmtCheckBefore->close();
 
-                // 加回数量
                 $stmtUpdateEq = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
                 $stmtUpdateEq->bind_param("is", $quantity, $equipmentId);
                 $stmtUpdateEq->execute();
                 $stmtUpdateEq->close();
 
-                // ✅ 精准判断：只有系统设为 unavailable，且数量恢复时才改 status
+                //check need to update the status or not
                 if ($beforeQty === 0 && $beforeStatus === 0) {
                     $stmtRestore = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 1 WHERE EquipmentID = ?");
                     $stmtRestore->bind_param("s", $equipmentId);

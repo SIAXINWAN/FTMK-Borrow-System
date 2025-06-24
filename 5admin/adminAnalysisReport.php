@@ -164,7 +164,6 @@
       background-color: #e6b800;
     }
 
-    /* 防止按钮被拍进 PDF */
     .no-print {
       display: block;
     }
@@ -186,52 +185,6 @@
 
 
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script>
-    function exportSectionAsPDF(sectionId, filename) {
-      const element = document.getElementById(sectionId);
-      const noPrintElems = document.querySelectorAll('.no-print');
-
-      // 隐藏按钮
-      noPrintElems.forEach(el => el.style.display = 'none');
-
-      const opt = {
-        margin: 0.5,
-        filename: filename,
-        image: {
-          type: 'jpeg',
-          quality: 0.98
-        },
-        html2canvas: {
-          scale: 2
-        },
-        jsPDF: {
-          unit: 'in',
-          format: 'a4',
-          orientation: 'portrait'
-        }
-      };
-
-      const allTabs = document.querySelectorAll('.tab-content');
-      allTabs.forEach(tab => tab.style.display = 'none');
-      const target = document.getElementById(sectionId);
-      target.style.display = 'block';
-
-      html2pdf().set(opt).from(target).save().then(() => {
-        // 恢复原本显示
-        allTabs.forEach(tab => {
-          if (tab.classList.contains('active')) {
-            tab.style.display = 'block';
-          } else {
-            tab.style.display = 'none';
-          }
-        });
-
-        // 显示按钮回来
-        noPrintElems.forEach(el => el.style.display = 'flex');
-      });
-    }
-  </script>
   <div id="usage" class="tab-content active">
     <h3>Detailed Equipment Usage</h3>
     <div class="filter-row" style="text-align: right;">
@@ -305,6 +258,7 @@
           <th>Phone</th>
           <th>Equipment Name</th>
           <th>Due Date</th>
+          <th>Purpose</th>
         </tr>
       </thead>
       <tbody id="overdueBody">
@@ -313,26 +267,83 @@
     </table>
   </div>
 
+  <div class="pdf-buttons no-print">
+    <button onclick="exportSectionAsPDF('usage', 'equipment_usage_report.pdf')">Download Usage as PDF</button>
+    <button onclick="exportSectionAsPDF('overdue', 'overdue_list_report.pdf')">Download Overdue as PDF</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
   <script>
     let usageChart;
 
     function showTab(tabId) {
       document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
       document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
-      document.getElementById(tabId).classList.add("active");
-      event.target.classList.add("active");
+
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) {
+        targetTab.classList.add("active");
+      }
+
+      const buttons = document.querySelectorAll(".tab-button");
+      buttons.forEach(btn => {
+        if (btn.textContent.toLowerCase().includes(tabId.toLowerCase())) {
+          btn.classList.add("active");
+        }
+      });
     }
 
-    function loadOverdue() {
-      const filter = document.getElementById("filterSelect").value;
-      fetch(`getOverdueList.php?filter=${filter}`)
-        .then(res => res.text())
-        .then(html => {
-          document.getElementById("overdueBody").innerHTML = html;
-        });
+    function exportSectionAsPDF(sectionId, filename) {
+      showTab(sectionId); 
+
+      const element = document.getElementById(sectionId);
+      const noPrintElems = document.querySelectorAll('.no-print');
+
+      noPrintElems.forEach(el => el.style.display = 'none');
+
+      const opt = {
+        margin: 0.5,
+        filename: filename,
+        image: {
+          type: 'jpeg',
+          quality: 0.98
+        },
+        html2canvas: {
+          scale: 2
+        },
+        jsPDF: {
+          unit: 'in',
+          format: 'a4',
+          orientation: 'portrait'
+        }
+      };
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        
+        noPrintElems.forEach(el => el.style.display = 'flex');
+
+        showTab(sectionId);
+      });
+    }
+
+    function showChart() {
+      document.getElementById("usageChart").style.display = "block";
+      document.getElementById("usageTable_wrapper").style.display = "none";
+      document.querySelector(".most-borrowed").style.display = "block";
+      document.getElementById("chartBtn").classList.add("active");
+      document.getElementById("tableBtn").classList.remove("active");
+    }
+
+    function showTable() {
+      document.getElementById("usageChart").style.display = "none";
+      document.getElementById("usageTable_wrapper").style.display = "block";
+      document.querySelector(".most-borrowed").style.display = "none";
+      document.getElementById("tableBtn").classList.add("active");
+      document.getElementById("chartBtn").classList.remove("active");
     }
 
     function loadUsage() {
@@ -342,7 +353,6 @@
 
       const isChartVisible = document.getElementById("usageChart").style.display !== "none";
 
-      // Chart
       fetch(`getUsageChart.php?role=${role}&year=${year}&month=${month}`)
         .then(res => res.json())
         .then(chartData => {
@@ -367,59 +377,44 @@
               }
             }
           });
+
           if (chartData.labels && chartData.data && chartData.data.length > 0) {
             const maxCount = Math.max(...chartData.data);
             const mostItems = chartData.labels.filter((label, index) => chartData.data[index] === maxCount);
-            document.getElementById("mostItem").innerText = mostItems.length > 0 ? mostItems.join(", ") : "-";
+            document.getElementById("mostItem").innerText = mostItems.join(", ");
           } else {
             document.getElementById("mostItem").innerText = "-";
           }
 
-
-
-          // 控制显示：如果 chart 本来是隐藏的，就继续隐藏
           if (!isChartVisible) {
             document.getElementById("usageChart").style.display = "none";
             document.querySelector(".most-borrowed").style.display = "none";
           }
         });
 
-      // Table
-      // Table
       fetch(`getUsageTable.php?role=${role}&year=${year}&month=${month}`)
         .then(res => res.text())
         .then(html => {
           $('#usageTable').DataTable().destroy();
           document.getElementById("usageBody").innerHTML = html;
-
           $('#usageTable').DataTable({
             pageLength: 5,
             initComplete: function() {
-              // 只有在 Chart 是显示状态时，才隐藏表格 wrapper
               if (document.getElementById("usageChart").style.display !== "none") {
                 document.getElementById("usageTable_wrapper").style.display = "none";
               }
             }
           });
         });
-
     }
 
-
-    function showChart() {
-      document.getElementById("usageChart").style.display = "block";
-      document.getElementById("usageTable_wrapper").style.display = "none";
-      document.querySelector(".most-borrowed").style.display = "block";
-      document.getElementById("chartBtn").classList.add("active");
-      document.getElementById("tableBtn").classList.remove("active");
-    }
-
-    function showTable() {
-      document.getElementById("usageChart").style.display = "none";
-      document.getElementById("usageTable_wrapper").style.display = "block";
-      document.querySelector(".most-borrowed").style.display = "none";
-      document.getElementById("tableBtn").classList.add("active");
-      document.getElementById("chartBtn").classList.remove("active");
+    function loadOverdue() {
+      const filter = document.getElementById("filterSelect").value;
+      fetch(`getOverdueList.php?filter=${filter}`)
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("overdueBody").innerHTML = html;
+        });
     }
 
     window.onload = function() {
@@ -436,10 +431,6 @@
       loadUsage();
     }
   </script>
-  <div class="pdf-buttons no-print">
-    <button onclick="exportSectionAsPDF('usage', 'equipment_usage_report.pdf')">Download Usage as PDF</button>
-    <button onclick="exportSectionAsPDF('overdue', 'overdue_list_report.pdf')">Download Overdue as PDF</button>
-  </div>
 
 </body>
 

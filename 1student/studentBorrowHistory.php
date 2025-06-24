@@ -127,43 +127,59 @@ $no = 1;
         <th>Return Date</th>
       </tr>
     </thead>
-    <tbody>
-      <?php while ($row = $result->fetch_assoc()) { ?>
-        <tr>
-          <td><?php echo $no++; ?></td>
-          <td><?php echo htmlspecialchars($row['EquipmentID']); ?></td>
-          <td><?php echo htmlspecialchars($row['EquipmentName']); ?></td>
-          <td><?php echo htmlspecialchars($row['ModelNumber']); ?></td>
-          <td>
-            <?php
-            if ($row['BorrowDate']) {
-              echo htmlspecialchars($row['BorrowDate']);
-            } else {
-              echo "<span class='pickup-alert'>Ready for pickup</span>";
-            }
-            ?>
-          </td>
-          <td><?php echo $row['DueDate'] ? htmlspecialchars($row['DueDate']) : '-'; ?></td>
-          <td>
-            <?php
-            $today = date("Y-m-d");
-            $dueDate = $row['DueDate'];
-            $returnDate = $row['ReturnDate'];
+    <?php
+    $rows = [];
+    while ($row = $result->fetch_assoc()) {
+      $rows[] = $row;
+    }
+    ?>
 
-            if (empty($returnDate) || $returnDate === '0000-00-00') {
-              if ($today > $dueDate && !empty($dueDate)) {
-                echo "<span style='color: red; font-weight: bold;'>Late</span>";
-              } else {
-                echo "-";
-              }
-            } else {
-              echo htmlspecialchars($returnDate);
-            }
-            ?>
+    <tbody>
+      <?php if (empty($rows)) { ?>
+        <tr class="no-data-row">
+          <td colspan="7" style="text-align: center; font-style: italic; color: #555; background-color: #f0f0f0;">
+            No borrow records found.
           </td>
         </tr>
+      <?php } else { ?>
+        <?php foreach ($rows as $row) { ?>
+          <tr>
+            <td><?php echo $no++; ?></td>
+            <td><?php echo htmlspecialchars($row['EquipmentID']); ?></td>
+            <td><?php echo htmlspecialchars($row['EquipmentName']); ?></td>
+            <td><?php echo htmlspecialchars($row['ModelNumber']); ?></td>
+            <td>
+              <?php
+              if ($row['BorrowDate']) {
+                echo htmlspecialchars($row['BorrowDate']);
+              } else {
+                echo "<span class='pickup-alert'>Ready for pickup</span>";
+              }
+              ?>
+            </td>
+            <td><?php echo $row['DueDate'] ? htmlspecialchars($row['DueDate']) : '-'; ?></td>
+            <td>
+              <?php
+              $today = date("Y-m-d");
+              $dueDate = $row['DueDate'];
+              $returnDate = $row['ReturnDate'];
+
+              if (empty($returnDate) || $returnDate === '0000-00-00') {
+                if ($today > $dueDate && !empty($dueDate)) {
+                  echo "<span style='color: red; font-weight: bold;'>Late</span>";
+                } else {
+                  echo "-";
+                }
+              } else {
+                echo htmlspecialchars($returnDate);
+              }
+              ?>
+            </td>
+          </tr>
+        <?php } ?>
       <?php } ?>
     </tbody>
+
   </table>
 
   <script>
@@ -171,7 +187,7 @@ $no = 1;
     const table = document.getElementById("borrowTable");
     const tbody = table.querySelector("tbody");
 
-    filterSelect.addEventListener("change", function () {
+    filterSelect.addEventListener("change", function() {
       const filterValue = this.value;
       let visibleCount = 0;
 

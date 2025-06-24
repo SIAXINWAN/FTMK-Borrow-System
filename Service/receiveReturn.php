@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['serviceID']) && isset($_SESSION['role']) && $_SESSION['role'] === 'Technician') {
         $serviceID = $_POST['serviceID'];
 
-        // 更新状态
         $stmt1 = $conn->prepare("UPDATE service_history SET ReceivedReturn = 'Done' WHERE ServiceID = ?");
         $stmt1->bind_param("i", $serviceID);
 
@@ -18,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt1->close();
             $stmt2->close();
 
-            // 获取公司信息和设备信息
             $stmt3 = $conn->prepare("
                 SELECT sl.CompanyID, sl.EquipmentID, sl.Quantity, e.EquipmentName, u.Name AS CompanyName, u.Email AS CompanyEmail
                 FROM servicelog sl
@@ -36,10 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $companyEmail = $row['CompanyEmail'];
                 $equipmentName = $row['EquipmentName'];
                 $equipmentID = $row['EquipmentID'];
-                $quantityReturned = $row['Quantity']; // 归还数量
+                $quantityReturned = $row['Quantity']; 
 
-                // 1️⃣ 更新设备数量，加回库存
-                // 1️⃣ 查询归还前的库存状态
                 $stmtCheck = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
                 $stmtCheck->bind_param("s", $equipmentID);
                 $stmtCheck->execute();
@@ -49,13 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $beforeStatus = (int)$equipmentRow['AvailabilityStatus'];
                 $stmtCheck->close();
 
-                // 2️⃣ 加回设备数量
                 $stmt4 = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
                 $stmt4->bind_param("is", $quantityReturned, $equipmentID);
                 $stmt4->execute();
                 $stmt4->close();
 
-                // 3️⃣ 恢复状态（如果之前是自动设为 unavailable）
                 if ($beforeQty === 0 && $beforeStatus === 0) {
                     $stmtStatus = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 1 WHERE EquipmentID = ?");
                     $stmtStatus->bind_param("s", $equipmentID);
@@ -63,8 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtStatus->close();
                 }
 
-
-                // 2️⃣ Email 通知
                 $subject = "Equipment Received Confirmation";
                 $body = "
                 Dear $companyName,<br><br>

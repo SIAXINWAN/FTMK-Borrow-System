@@ -17,6 +17,15 @@ $stmt1->execute();
 $appResult = $stmt1->get_result();
 
 $appRow = $appResult->fetch_assoc();
+
+
+if (!$appRow) {
+  echo "<script>
+    alert('You have not submitted any borrow application yet.');
+    window.location.href = 'lecturerMainPage.php';
+  </script>";
+  exit;
+}
 $applicationId = $appRow['ApplicationID'];
 
 $stmt2 = $conn->prepare("SELECT ApproverRole, Status, Remarks 

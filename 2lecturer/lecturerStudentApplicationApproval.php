@@ -277,7 +277,7 @@ session_start(); ?>
                     appId: appId,
                     remarks: reason
                 }, function(response) {
-                    hideLoading(); // ✅ 隐藏 loading
+                    hideLoading(); 
                     console.log("Server response:", response);
 
                     if (response === "success") {

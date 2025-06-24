@@ -93,6 +93,13 @@ $no = 1;
             border-radius: 10px;
             margin-bottom: 5px;
         }
+
+        .no-data-row td {
+            text-align: center;
+            font-style: italic;
+            color: #555;
+            background-color: #f0f0f0
+        }
     </style>
 </head>
 
@@ -132,7 +139,7 @@ $no = 1;
                         echo "</tr>";
                     }
                 } else {
-                    echo '<tr><td colspan="7" style="text-align: center;;">No service history found.</td></tr>';
+                    echo '<tr class = "no-data-row"><td colspan="7" style="text-align: center;;">No service history found.</td></tr>';
                 }
                 ?>
             </tbody>

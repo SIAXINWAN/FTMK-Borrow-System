@@ -15,8 +15,10 @@ $stmt = $conn->prepare("SELECT bh.*, e.EquipmentName, e.ModelNumber, s.* ,ba.*
 $stmt->bind_param("s", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
+$rows = $result->fetch_all(MYSQLI_ASSOC);
 
 $no = 1;
+
 ?>
 
 <!DOCTYPE html>
@@ -129,41 +131,51 @@ $no = 1;
       </tr>
     </thead>
     <tbody>
-      <?php while ($row = $result->fetch_assoc()) { ?>
-        <tr>
-          <td><?php echo $no++; ?></td>
-          <td><?php echo htmlspecialchars($row['EquipmentID']); ?></td>
-          <td><?php echo htmlspecialchars($row['EquipmentName']); ?></td>
-          <td><?php echo htmlspecialchars($row['ModelNumber']); ?></td>
-          <td><?php
+      <?php if (empty($rows)) { ?>
+        <tr class="no-data-row">
+          <td colspan="7" style="text-align: center; font-style: italic; color: #555; background-color: #f0f0f0;">
+            No borrow records found.
+          </td>
+        </tr>
+      <?php } else { ?>
+        <?php foreach ($rows as $row) { ?>
+          <tr>
+            <td><?php echo $no++; ?></td>
+            <td><?php echo htmlspecialchars($row['EquipmentID']); ?></td>
+            <td><?php echo htmlspecialchars($row['EquipmentName']); ?></td>
+            <td><?php echo htmlspecialchars($row['ModelNumber']); ?></td>
+            <td>
+              <?php
               if ($row['BorrowDate']) {
                 echo htmlspecialchars($row['BorrowDate']);
               } else {
                 echo "<span class='pickup-alert'>Ready for pickup</span>";
               }
               ?>
-          </td>
-          <td><?php echo $row['DueDate'] ? htmlspecialchars($row['DueDate']) : '-'; ?></td>
-          <td>
-            <?php
-            $today = date("Y-m-d");
-            $dueDate = $row['DueDate'];
-            $returnDate = $row['ReturnDate'];
+            </td>
+            <td><?php echo $row['DueDate'] ? htmlspecialchars($row['DueDate']) : '-'; ?></td>
+            <td>
+              <?php
+              $today = date("Y-m-d");
+              $dueDate = $row['DueDate'];
+              $returnDate = $row['ReturnDate'];
 
-            if (empty($returnDate) || $returnDate === '0000-00-00') {
-              if ($today > $dueDate && !empty($dueDate)) {
-                echo "<span style='color: red; font-weight: bold;'>Late</span>";
+              if (empty($returnDate) || $returnDate === '0000-00-00') {
+                if ($today > $dueDate && !empty($dueDate)) {
+                  echo "<span style='color: red; font-weight: bold;'>Late</span>";
+                } else {
+                  echo "-";
+                }
               } else {
-                echo "-";
+                echo htmlspecialchars($returnDate);
               }
-            } else {
-              echo htmlspecialchars($returnDate);
-            }
-            ?>
-          </td>
-        </tr>
+              ?>
+            </td>
+          </tr>
+        <?php } ?>
       <?php } ?>
     </tbody>
+
   </table>
 
   <script>

@@ -119,15 +119,18 @@ $receivedReturn = $history['ReceivedReturn'];
         }
 
         .status-approved {
-            background-color: #00b894; /* 青色 */
+            background-color: #00b894;
+           
         }
 
         .status-pending {
-            background-color: #b2bec3; /* 灰色 */
+            color: grey;
+            font-weight: bold;
         }
 
         .status-incomplete {
-            background-color: #d63031; /* 红色 */
+            background-color: #d63031;
+            
             color: white;
         }
 
@@ -153,7 +156,10 @@ $receivedReturn = $history['ReceivedReturn'];
 
     <div class="container">
         <table class="equipment-table">
-            <tr><th>Name</th><th>Description</th></tr>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
             <tr>
                 <td><?= htmlspecialchars($row['EquipmentName']) ?></td>
                 <td><?= htmlspecialchars($row['Description']) ?></td>
@@ -162,16 +168,16 @@ $receivedReturn = $history['ReceivedReturn'];
 
         <div class="status-item">
             <div class="status-label">Admin Approval</div>
-            <button class="status-button <?= ($adminDecision === 'Approved') ? 'status-approved' : 'status-pending' ?>" disabled>
+            <label class="<?= ($adminDecision === 'Approved') ? 'status-approved' : 'status-pending' ?>">
                 <?= ($adminDecision === 'Approved') ? 'Approved' : 'Pending' ?>
-            </button>
+            </label>
         </div>
 
         <div class="status-item">
             <div class="status-label">Service Request Acceptance</div>
-            <button class="status-button <?= $acceptDate ? 'status-approved' : 'status-pending' ?>" disabled>
+            <label class="<?= $acceptDate ? 'status-approved' : 'status-pending' ?>">
                 <?= $acceptDate ? 'Confirmed' : 'Pending' ?>
-            </button>
+            </label>
             <?php if ($acceptDate): ?>
                 <span style="padding-left: 20px; font-weight: bold; color: #555;">
                     <?= date("Y-m-d H:i", strtotime($acceptDate)) ?>
@@ -181,9 +187,9 @@ $receivedReturn = $history['ReceivedReturn'];
 
         <div class="status-item">
             <div class="status-label">Pickup Equipment</div>
-            <button class="status-button <?= ($actionTaken === 'Done') ? 'status-approved' : 'status-pending' ?>" disabled>
+            <label class="<?= ($actionTaken === 'Done') ? 'status-approved' : 'status-pending' ?>">
                 <?= ($actionTaken === 'Done') ? 'Done' : 'Pending' ?>
-            </button>
+            </label>
         </div>
 
         <div class="status-item">
@@ -198,9 +204,9 @@ $receivedReturn = $history['ReceivedReturn'];
                 $repairClass = 'status-pending';
             }
             ?>
-            <button class="status-button <?= $repairClass ?>" disabled>
+            <label class="<?= $repairClass ?>">
                 <?= htmlspecialchars($repairDisplay) ?>
-            </button>
+            </label>
         </div>
 
         <?php if ($note): ?>
@@ -215,32 +221,31 @@ $receivedReturn = $history['ReceivedReturn'];
             <tr>
                 <td>Company Repair</td>
                 <td>
-                    <button class="status-button <?= $returnDate ? 'status-approved' : 'status-pending' ?>" disabled>
+                    <label class="<?= $returnDate ? 'status-approved' : 'status-pending' ?>">
                         <?= $returnDate ? 'Done' : 'Pending' ?>
-                    </button>
+                    </label>
                 </td>
             </tr>
             <tr>
                 <td>FTMK</td>
                 <td>
                     <?php if (!$returnDate): ?>
-                        <button class="status-button status-pending" disabled>Pending</button>
+                        <label class="status-pending">Pending</label>
                     <?php elseif ($receivedReturn !== 'Done'): ?>
                         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Technician'): ?>
-                            <form method="POST" action="../Service/receiveReturn.php" onsubmit="return confirm('Confirm received return?');">
-                                <input type="hidden" name="serviceID" value="<?= $serviceID ?>">
-                                <button type="submit" class="status-button status-approved">Received</button>
-                            </form>
+                            <label class="status-button status-click">Received</label>
+                            <!-- Optional: include note to user that action should be taken on another page -->
                         <?php else: ?>
-                            <button class="status-button status-pending" disabled>Pending</button>
+                            <label class="status-pending">Pending</label>
                         <?php endif; ?>
                     <?php else: ?>
-                        <button class="status-button status-approved" disabled>Received</button>
+                        <label class="status-approved">Received</label>
                     <?php endif; ?>
                 </td>
             </tr>
         </table>
     </div>
+
 </body>
 
 </html>

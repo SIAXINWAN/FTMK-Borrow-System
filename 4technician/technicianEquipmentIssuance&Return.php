@@ -1,3 +1,7 @@
+<?php
+include("../connect.php");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -95,6 +99,13 @@
             padding: 0;
             margin: 0 auto;
         }
+
+        .no-data-row td {
+            text-align: center;
+            font-style: italic;
+            color: #555;
+            background-color: #f0f0f0
+        }
     </style>
 </head>
 
@@ -130,7 +141,7 @@
             </thead>
             <tbody>
                 <?php
-                include("../connect.php");
+                
 
                 $stmt = $conn->prepare("SELECT bh.BorrowID, ba.ApplicationID, u.Name AS BorrowerName, e.EquipmentName, bh.ReturnDate, bh.BorrowDate,bh.DueDate
                         FROM borrow_applications ba
@@ -185,7 +196,7 @@
                         $no++;
                     }
                 } else {
-                    echo "<tr><td colspan='8'>No approved applications found.</td></tr>";
+                    echo "<tr class='no-data-row'><td colspan='8'>No approved applications found.</td></tr>";
                 }
                 ?>
             </tbody>
@@ -258,7 +269,7 @@
                         } else {
                             alert("Failed to update return date: " + (res.message || ""));
                         }
-                    }, 'json'); // 👈 important! 明确告诉 jQuery 这是 JSON
+                    }, 'json'); 
 
                 }
             });

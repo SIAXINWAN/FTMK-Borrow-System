@@ -29,7 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $technicianEmail = $row['TechnicianEmail'];
             $equipmentName = $row['EquipmentName'];
 
-            // 邮件通知
             $subject = "Service Pickup Schedule Notification";
             $formattedDate = date("F j, Y \\a\\t g:i A", strtotime($acceptDate));
             $body = "

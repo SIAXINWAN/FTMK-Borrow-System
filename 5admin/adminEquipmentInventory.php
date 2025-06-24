@@ -263,14 +263,14 @@ unset($_SESSION['success']);
                 if (confirm(confirmText)) {
                     const reason = prompt("Please provide a reason for this status change:");
                     if (reason && reason.trim() !== "") {
-                        $("#loadingOverlay").show(); // 显示 loading
+                        $("#loadingOverlay").show();
 
                         $.post("../Equipment/changeStatus.php", {
                             id: id,
                             status: newStatus,
                             reason: reason
                         }, function(res) {
-                            $("#loadingOverlay").hide(); // 隐藏 loading
+                            $("#loadingOverlay").hide(); 
 
                             if (res.trim() === "success") {
                                 alert("Availability Status Upadate Successfully!");

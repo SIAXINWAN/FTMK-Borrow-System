@@ -256,7 +256,7 @@ unset($_SESSION['success']);
                 if (confirm(confirmText)) {
                     const reason = prompt("Please provide a reason for this status change:");
                     if (reason && reason.trim() !== "") {
-                        $("#loadingOverlay").show(); // 显示 loading
+                        $("#loadingOverlay").show(); 
 
                         $.post("../Equipment/changeStatus.php", {
                             id: id,
@@ -271,7 +271,7 @@ unset($_SESSION['success']);
                             } else {
                                 alert("Failed to update status.");
                             }
-                            $("#loadingOverlay").hide(); // 隐藏 loading
+                            $("#loadingOverlay").hide(); 
                         });
                     } else {
                         alert("Status change cancelled: reason is required.");

@@ -12,17 +12,14 @@ $sql = "SELECT e.EquipmentName, COUNT(*) AS BorrowCount,ba.*
         JOIN users u ON ba.UserID = u.UserID
         WHERE 1=1";
 
-// Filter: Role
 if ($role !== 'All') {
     $sql .= " AND u.Role = '" . $conn->real_escape_string($role) . "'";
 }
 
-// Filter: Year
 if ($year !== 'All') {
     $sql .= " AND YEAR(bh.BorrowDate) = " . intval($year);
 }
 
-// Filter: Month
 if ($month !== 'All') {
     $sql .= " AND MONTH(bh.BorrowDate) = " . intval($month);
 }

@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $id = $_POST['id'] ?? '';
     $status = $_POST['status'] ?? '';
     $reason = $_POST['reason'] ?? '';
-    $currentUserEmail = $_SESSION['Email'] ?? ''; 
+    $currentUserEmail = $_SESSION['Email'] ?? '';
 
     if ($id !== '' && ($status === '1' || $status === '0') && trim($reason) !== '') {
         $sql = "UPDATE equipment SET AvailabilityStatus = ? WHERE EquipmentID = ?";
@@ -47,7 +47,7 @@ This is to inform you that the status of the following equipment has been change
     <li><strong>New Status:</strong> $statusText</li>
     <li><strong>Reason:</strong> $reason</li>
 </ul>
-If you have any questions, kindly contact the technician in charge.<br><br>
+
 Best regards,<br>
 FTMK Borrow System<br>
 UTeM

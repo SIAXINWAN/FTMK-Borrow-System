@@ -57,7 +57,7 @@ if ($stmt->execute()) {
         $adminResult = $conn->query("SELECT Name, Email FROM users WHERE Role = 'Admin'");
         while ($admin = $adminResult->fetch_assoc()) {
             $adminEmail = $admin['Email'];
-            $adminName = $admin['Name']; // 现在这行就会有值了
+            $adminName = $admin['Name']; 
 
             $subject = "New Service Request Pending Your Approval";
             $body = "

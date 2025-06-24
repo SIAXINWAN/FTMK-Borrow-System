@@ -133,21 +133,38 @@ $no = 1;
                 <th>Return Date</th>
                 <th>Check Status</th>
             </tr>
+            <?php
+            $rows = $result->fetch_all(MYSQLI_ASSOC);
+            $stmt->close();
+            ?>
+
             <tbody>
-                <?php
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . $no++ . "</td>";
-                    echo "<td>" . $row['CompanyName'] . "</td>";
-                    echo "<td>" . $row['EquipmentName'] . "</td>";
-                    echo "<td>" . $row['ModelNumber'] . "</td>";
-                    echo "<td>" . $row['AcceptDate'] . "</td>";
-                    echo "<td>" . $row['ReturnDate'] . "</td>";
-                    echo "<td><a href='checkServiceStatus.php?serviceID=" . $row['ServiceID'] . "'><button class='buttonStatus'>Check Status</button></a></td>";
-                    echo "</tr>";
-                }
-                ?>
+                <?php if (empty($rows)) { ?>
+                    <tr class="no-data-row">
+                        <td colspan="7" style="text-align: center; font-style: italic; color: #555; background-color: #f0f0f0;">
+                            No completed service record found.
+                        </td>
+                    </tr>
+                <?php } else { ?>
+                    <?php foreach ($rows as $row) { ?>
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td><?php echo htmlspecialchars($row['CompanyName']); ?></td>
+                            <td><?php echo htmlspecialchars($row['EquipmentName']); ?></td>
+                            <td><?php echo htmlspecialchars($row['ModelNumber']); ?></td>
+                            <td><?php echo htmlspecialchars($row['AcceptDate']); ?></td>
+                            <td><?php echo htmlspecialchars($row['ReturnDate']); ?></td>
+                            <td>
+                                <a href="checkServiceStatus.php?serviceID=<?php echo $row['ServiceID']; ?>">
+                                    <button class="buttonStatus">Check Status</button>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                <?php } ?>
             </tbody>
+
+
 
         </table>
     </div>

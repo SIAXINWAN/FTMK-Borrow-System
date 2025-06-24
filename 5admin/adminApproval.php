@@ -81,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt5->execute();
             $stmt5->close();
 
-            // 获取 reject 前的数量和 availability status
             $stmtQty = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
             $stmtQty->bind_param("s", $equipmentId);
             $stmtQty->execute();
@@ -107,7 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
 
-            // Send rejection email
             $subject = "Your Borrow Application Has Been Rejected";
             $body = "
             Dear $userName,<br><br>

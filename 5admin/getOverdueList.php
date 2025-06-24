@@ -29,5 +29,6 @@ while ($row = $result->fetch_assoc()) {
             <td>{$row['Phone']}</td>
             <td>{$row['EquipmentName']}</td>
             <td>{$row['DueDate']}</td>
+            <td>{$row['Purpose']}</td>
           </tr>";
 }

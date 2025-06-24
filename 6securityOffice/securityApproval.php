@@ -89,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
         $stmt->close();
 
-        // 获取 reject 前的设备状态（在加 quantity 前）
         $stmtBefore = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
         $stmtBefore->bind_param("i", $equipmentId);
         $stmtBefore->execute();
@@ -99,14 +98,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $beforeStatus = (int)$beforeData['AvailabilityStatus'];
         $stmtBefore->close();
 
-        // Restore quantity
         $stmt = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
         $stmt->bind_param("is", $borrowQty, $equipmentId);
         $stmt->execute();
         $stmt->close();
 
 
-        // ✅ 只有系统自动设为 unavailable（beforeQty == 0 且 status == 0）才恢复
         if ($beforeQty === 0 && $beforeStatus === 0) {
             $stmtRestore = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 1 WHERE EquipmentID = ?");
             $stmtRestore->bind_param("i", $equipmentId);
@@ -114,8 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtRestore->close();
         }
 
-
-        // Notify borrower
         $subject = "Your Borrow Application Has Been Rejected";
         $body = "
             Dear $userName,<br><br>

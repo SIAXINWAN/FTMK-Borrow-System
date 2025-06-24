@@ -318,12 +318,6 @@ $stmt2->close();
 
 
 
-
-
-
-
-
-
 </body>
 
 </html>

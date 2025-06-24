@@ -14,9 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($checkResult && $checkResult->num_rows > 0) {
         $userRow = $checkResult->fetch_assoc();
 
-        // Check if password is empty/null (lecturer belum daftar)
         if (empty($userRow['Password'])) {
-            // Go to dummy table to get more info
             $dummyStmt = $conn->prepare("SELECT * FROM dummy WHERE UserID = ? AND IC = ?");
             $dummyStmt->bind_param("ss", $userID, $ic);
             $dummyStmt->execute();
@@ -47,7 +45,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     $checkStmt->close();
 
-    // Step 2: If user not in `users` table, check dummy table (student etc.)
     $stmt = $conn->prepare("SELECT * FROM dummy WHERE UserID = ? AND IC = ?");
     $stmt->bind_param("ss", $userID, $ic);
     $stmt->execute();

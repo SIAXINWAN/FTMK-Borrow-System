@@ -390,7 +390,7 @@ if (isset($_GET['serviceID'])) {
       </tr>
     </table>
   </div>
-  <!-- Loading Spinner Overlay -->
+  
   <div id="loadingOverlay" style="display: none;">
     <div class="spinner-container">
       <div class="spinner"></div>
@@ -399,7 +399,7 @@ if (isset($_GET['serviceID'])) {
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const targetForms = ["updateAcceptDate.php", "updateReturnDate.php"]; // 只处理这两个表单
+      const targetForms = ["updateAcceptDate.php", "updateReturnDate.php"]; 
 
       document.querySelectorAll("form").forEach(form => {
         form.addEventListener("submit", function(e) {
@@ -407,10 +407,10 @@ if (isset($_GET['serviceID'])) {
           if (targetForms.includes(action)) {
             const confirmed = confirm("Are you sure to proceed?");
             if (!confirmed) {
-              e.preventDefault(); // 用户按“取消”时不提交
+              e.preventDefault(); 
               return;
             }
-            showLoading(); // 用户确认后才 show loading
+            showLoading(); 
           }
         });
       });

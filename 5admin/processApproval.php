@@ -74,18 +74,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 sendNotification($technicianEmail, $subjectT, $bodyT);
 
                 // Email to company
-                $subjectC = "New Approved Service Request";
+                $subjectC = "Action Required: Approved Service Request for Equipment";
+
                 $bodyC = "
-                Dear $companyName,<br><br>
-                A service request involving equipment <b>$equipmentName</b> (Service ID: $serviceId) has been approved.<br>
-                Please expect coordination from the technician soon via the <b><a href='https://webapp.utem.edu.my/student/dit/jcats/FTMK-Borrow-System/' target='_blank'>FTMK Borrow System</a></b>.<br><br>
-                Thank you.<br><br>
-                Best regards,<br>
-                FTMK Borrow System<br>
-                University Teknikal Malaysia Melaka (UTeM)<br>";
+Dear $companyName,<br><br>
+
+We are pleased to inform you that a service request involving the equipment <b>$equipmentName</b> (Service ID: <b>$serviceId</b>) has been <b>approved</b>.<br><br>
+
+Please proceed to take the necessary servicing action as soon as possible. A technician will coordinate with you shortly through the <b><a href='https://webapp.utem.edu.my/student/dit/jcats/FTMK-Borrow-System/' target='_blank'>FTMK Borrow System</a></b>.<br><br>
+
+Thank you for your prompt attention to this matter.<br><br>
+
+Best regards,<br>
+FTMK Borrow System<br>
+Universiti Teknikal Malaysia Melaka (UTeM)<br>
+";
+
                 sendNotification($companyEmail, $subjectC, $bodyC);
             } elseif ($decision === 'Rejected') {
-                // 查询 reject 前的设备数量与 status
                 $stmtCheck = $conn->prepare("SELECT Quantity, AvailabilityStatus FROM equipment WHERE EquipmentID = ?");
                 $stmtCheck->bind_param("s", $equipmentId);
                 $stmtCheck->execute();
@@ -95,13 +101,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $beforeStatus = (int) $equipmentRow['AvailabilityStatus'];
                 $stmtCheck->close();
 
-                // 加回设备数量
                 $stmt4 = $conn->prepare("UPDATE equipment SET Quantity = Quantity + ? WHERE EquipmentID = ?");
                 $stmt4->bind_param("is", $equipmentQuantity, $equipmentId);
                 $stmt4->execute();
                 $stmt4->close();
 
-                // 判断是否需要恢复 status = 1
                 if ($beforeQty === 0 && $beforeStatus === 0) {
                     $stmtRestore = $conn->prepare("UPDATE equipment SET AvailabilityStatus = 1 WHERE EquipmentID = ?");
                     $stmtRestore->bind_param("s", $equipmentId);

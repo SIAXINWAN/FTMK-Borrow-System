@@ -386,10 +386,10 @@ $receivedReturn = $history['ReceivedReturn'];
         function handleReceiveSubmit() {
             const confirmed = confirm("Confirm received return?");
             if (confirmed) {
-                showLoading(); // 显示 loading
-                return true; // 允许提交
+                showLoading(); 
+                return true; 
             }
-            return false; // 用户取消则阻止提交
+            return false; 
         }
     </script>
 
