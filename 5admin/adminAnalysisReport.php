@@ -298,7 +298,7 @@
     }
 
     function exportSectionAsPDF(sectionId, filename) {
-      showTab(sectionId); 
+      showTab(sectionId);
 
       const element = document.getElementById(sectionId);
       const noPrintElems = document.querySelectorAll('.no-print');
@@ -323,7 +323,7 @@
       };
 
       html2pdf().set(opt).from(element).save().then(() => {
-        
+
         noPrintElems.forEach(el => el.style.display = 'flex');
 
         showTab(sectionId);
@@ -372,7 +372,15 @@
               responsive: true,
               scales: {
                 y: {
-                  beginAtZero: true
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function(value) {
+                      if (Number.isInteger(value)) {
+                        return value;
+                      }
+                    },
+                    stepSize: 1 
+                  }
                 }
               }
             }
