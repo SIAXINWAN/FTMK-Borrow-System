@@ -170,7 +170,11 @@ $no = 1;
                                         echo "-";
                                     }
                                 } else {
-                                    echo htmlspecialchars($returnDate);
+                                    if (!empty($dueDate) && $returnDate > $dueDate) {
+                                        echo "<span style='color: red; font-weight: bold;'>" . htmlspecialchars($returnDate) . "</span>";
+                                    } else {
+                                        echo htmlspecialchars($returnDate);
+                                    }
                                 }
                                 ?>
                             </td>
