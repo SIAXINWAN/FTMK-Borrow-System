@@ -110,7 +110,7 @@ unset($_SESSION['error']);
     }
 
     .equipment img {
-      
+
       object-fit: cover;
       background: #eee;
       display: block;
@@ -291,8 +291,8 @@ unset($_SESSION['error']);
       <label for="reason">Service Reason:</label>
       <textarea id="reason" rows="3" name="reason" placeholder="Enter your reason" required></textarea>
 
-      <label for="date">Date and time of Service:</label>
-      <input type="datetime-local" id="date" name="activityTime" required>
+      <!-- <label for="date">Date and time of Service:</label>
+      <input type="datetime-local" id="date" name="activityTime" required> -->
 
       <div class="buttons">
         <button class="submit-btn" type="submit">Submit</button>

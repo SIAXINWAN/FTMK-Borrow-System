@@ -120,7 +120,7 @@ $receivedReturn = $history['ReceivedReturn'];
 
         .status-approved {
             background-color: #00b894;
-           
+
         }
 
         .status-pending {
@@ -130,7 +130,7 @@ $receivedReturn = $history['ReceivedReturn'];
 
         .status-incomplete {
             background-color: #d63031;
-            
+
             color: white;
         }
 

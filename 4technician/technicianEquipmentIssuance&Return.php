@@ -141,7 +141,7 @@ include("../connect.php");
             </thead>
             <tbody>
                 <?php
-                
+
 
                 $stmt = $conn->prepare("SELECT bh.BorrowID, ba.ApplicationID, u.Name AS BorrowerName, e.EquipmentName, bh.ReturnDate, bh.BorrowDate,bh.DueDate
                         FROM borrow_applications ba
@@ -182,7 +182,7 @@ include("../connect.php");
                                 } else {
                                     echo "<td>-</td>";
                                 }
-                                echo "<td><button class='buttonStyle returnAction' data-id='{$row['BorrowID']}'><i class='fa fa-check iconStyle'></i></button></td>";
+                                echo "<td><button class='buttonStyle returnAction' data-id='{$row['BorrowID']}' data-due='{$row['DueDate']}'><i class='fa fa-check iconStyle'></i></button></td>";
                             } else {
                                 $formatted = date('d/m/Y', strtotime($returnDate));
                                 if ($returnDate > $dueDate) {
@@ -231,10 +231,11 @@ include("../connect.php");
                             row.find("td:eq(5)").text(format(res.dueDate)); // Due Date
                             row.find("td:eq(6)").text("-"); // Return Date
                             row.find("td:eq(7)").html(`
-            <button class='buttonStyle returnAction' data-id='${button.data("id")}' data-due='${res.dueDate}'>
-                <i class='fa fa-check iconStyle'></i>
-            </button>
-        `);
+    <button class='buttonStyle returnAction' data-id='${button.data("id")}' data-due='${res.dueDate}'>
+        <i class='fa fa-check iconStyle'></i>
+    </button>
+`);
+
                         } else {
                             alert("Failed to update issuance date: " + (res.message || ""));
                         }
@@ -269,7 +270,7 @@ include("../connect.php");
                         } else {
                             alert("Failed to update return date: " + (res.message || ""));
                         }
-                    }, 'json'); 
+                    }, 'json');
 
                 }
             });

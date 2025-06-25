@@ -6,7 +6,7 @@ include("../Notification/sendEmail.php");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
     $applicationId = $_POST['appId'];
-    $remarks = $_POST['remarks'] ?? null;
+    $remarks = $_POST['remarks'] ?? '';
     $securityId = $_SESSION['UserID'];
     $now = date('Y-m-d H:i:s');
     $status = ($action === 'approve') ? 'Approved' : 'Rejected';

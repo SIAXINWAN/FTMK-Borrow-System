@@ -274,24 +274,32 @@ if (isset($_GET['serviceID'])) {
                 <input type="hidden" name="serviceID" value="<?php echo $serviceID; ?>">
                 <input type="hidden" name="status" id="statusInputCompleted" value="">
                 <input type="hidden" name="note" id="noteInputCompleted">
+                <?php
+                $completedBtnClass = ($actionTaken !== 'Done') ? 'status-button status-pending' : 'status-button status-approved';
+                ?>
                 <button type="button"
                   onclick="chooseStatus('Completed', this)"
-                  class="status-button status-approved"
+                  class="<?php echo $completedBtnClass; ?>"
                   <?php echo ($actionTaken !== 'Done') ? 'disabled' : ''; ?>>
                   Complete
                 </button>
+
               </form>
 
               <form method="POST" action="updateRepairStatus.php" onsubmit="return validateStatusSelection(this);">
                 <input type="hidden" name="serviceID" value="<?php echo $serviceID; ?>">
                 <input type="hidden" name="status" id="statusInputIncomplete" value="">
                 <input type="hidden" name="note" id="noteInputIncomplete">
+                <?php
+                $incompleteBtnClass = ($actionTaken !== 'Done') ? 'status-button status-pending' : 'status-button status-failed';
+                ?>
                 <button type="button"
                   onclick="chooseStatus('Incomplete', this)"
-                  class="status-button status-failed"
+                  class="<?php echo $incompleteBtnClass; ?>"
                   <?php echo ($actionTaken !== 'Done') ? 'disabled' : ''; ?>>
                   Incomplete
                 </button>
+
               </form>
             </div>
           </div>
@@ -390,7 +398,7 @@ if (isset($_GET['serviceID'])) {
       </tr>
     </table>
   </div>
-  
+
   <div id="loadingOverlay" style="display: none;">
     <div class="spinner-container">
       <div class="spinner"></div>
@@ -399,7 +407,7 @@ if (isset($_GET['serviceID'])) {
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const targetForms = ["updateAcceptDate.php", "updateReturnDate.php"]; 
+      const targetForms = ["updateAcceptDate.php", "updateReturnDate.php"];
 
       document.querySelectorAll("form").forEach(form => {
         form.addEventListener("submit", function(e) {
@@ -407,10 +415,10 @@ if (isset($_GET['serviceID'])) {
           if (targetForms.includes(action)) {
             const confirmed = confirm("Are you sure to proceed?");
             if (!confirmed) {
-              e.preventDefault(); 
+              e.preventDefault();
               return;
             }
-            showLoading(); 
+            showLoading();
           }
         });
       });
