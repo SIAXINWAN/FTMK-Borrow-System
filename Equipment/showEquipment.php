@@ -52,7 +52,7 @@ $hasPending = false;
 
 $pendingSql = "SELECT COUNT(*) AS count FROM borrow_applications WHERE UserID = ? AND ApplicationStatus = 'Pending'";
 $stmt2 = $conn->prepare($pendingSql);
-$stmt2->bind_param("s", $userId);  
+$stmt2->bind_param("s", $userId);
 $stmt2->execute();
 $pendingResult = $stmt2->get_result();
 

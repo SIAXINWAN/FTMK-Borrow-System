@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $checkSql = "SELECT EquipmentID FROM equipment WHERE EquipmentID = ?";
     $stmt = $conn->prepare($checkSql);
-    $stmt->bind_param("s", $id);  
+    $stmt->bind_param("s", $id);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -31,11 +31,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION['old'] = $old;
     } else {
         if (isset($_FILES['picture']) && $_FILES['picture']['error'] == 0) {
-            $uploadDir = 'uploads/';
-            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+            $uploadDir = '../uploads/';
+            $relDir = 'uploads/';
 
-            $uploadPath = $uploadDir . uniqid('img_') . '_' . basename($_FILES['picture']['name']);
-            move_uploaded_file($_FILES['picture']['tmp_name'], $uploadPath);
+            $filename = uniqid('img_') . '_' . basename($_FILES['picture']['name']);
+            $fullUploadPath = $uploadDir . $filename;
+            $uploadPath = $relDir . $filename;
         }
 
         $sql = "INSERT INTO equipment (EquipmentID, EquipmentName, Brand, Type, ModelNumber, Description, Quantity, AvailabilityStatus, Picture, Date)

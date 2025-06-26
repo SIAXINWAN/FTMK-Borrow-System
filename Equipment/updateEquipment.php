@@ -16,16 +16,21 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $picture_sql = "";
 
     if (isset($_FILES['picture']) && $_FILES['picture']['error'] === 0) {
-        $uploadDir = 'uploads/';
-        $originalName = basename($_FILES['picture']['name']);
-        $newFileName = uniqid('img_') . '_' . $originalName;
-        $uploadPath = $uploadDir . $newFileName;
+        $uploadDir = dirname(__DIR__) . '/uploads/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 
-        if (!move_uploaded_file($_FILES['picture']['tmp_name'], $uploadPath)) {
+        $newFileName = uniqid('img_') . '_' . basename($_FILES['picture']['name']);
+        $relPath = 'uploads/' . $newFileName;
+        $fullUploadPath = dirname(__DIR__) . '/' . $relPath;
+
+        if (!move_uploaded_file($_FILES['picture']['tmp_name'], $fullUploadPath)) {
             echo "<p style='text-align:center;color:red'>Image upload failed.</p>";
             exit;
         }
+
+        $uploadPath = $relPath; 
     }
+
 
     if ($uploadPath) {
         $sql = "UPDATE equipment SET 
