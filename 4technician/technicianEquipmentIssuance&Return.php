@@ -132,6 +132,7 @@ include("../connect.php");
                     <th>No</th>
                     <th>Borrower's Name</th>
                     <th>Equipment Name</th>
+                    <th>Quantity</th>
                     <th>Issuance Date</th>
                     <th>Issuance Action</th>
                     <th>Due Date</th>
@@ -143,7 +144,7 @@ include("../connect.php");
                 <?php
 
 
-                $stmt = $conn->prepare("SELECT bh.BorrowID, ba.ApplicationID, u.Name AS BorrowerName, e.EquipmentName, bh.ReturnDate, bh.BorrowDate,bh.DueDate
+                $stmt = $conn->prepare("SELECT bh.BorrowID, ba.ApplicationID,ba.Quantity, u.Name AS BorrowerName, e.EquipmentName, bh.ReturnDate, bh.BorrowDate,bh.DueDate
                         FROM borrow_applications ba
                         JOIN users u ON ba.UserID = u.UserID
                         JOIN equipment e ON ba.EquipmentID = e.EquipmentID
@@ -161,6 +162,7 @@ include("../connect.php");
                         echo "<td>$no</td>";
                         echo "<td>" . htmlspecialchars($row['BorrowerName']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['EquipmentName']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['Quantity']) . "</td>";
 
                         $borrowDate = $row['BorrowDate'];
                         $dueDate = $row['DueDate'];
@@ -196,7 +198,7 @@ include("../connect.php");
                         $no++;
                     }
                 } else {
-                    echo "<tr class='no-data-row'><td colspan='8'>No approved applications found.</td></tr>";
+                    echo "<tr class='no-data-row'><td colspan='9'>No approved applications found.</td></tr>";
                 }
                 ?>
             </tbody>
@@ -226,11 +228,11 @@ include("../connect.php");
                                 return `${d}/${m}/${y}`;
                             };
 
-                            row.find("td:eq(3)").text(format(res.borrowDate)); // Issuance Date
-                            row.find("td:eq(4)").html(""); // Clear button
-                            row.find("td:eq(5)").text(format(res.dueDate)); // Due Date
-                            row.find("td:eq(6)").text("-"); // Return Date
-                            row.find("td:eq(7)").html(`
+                            row.find("td:eq(4)").text(format(res.borrowDate)); // Issuance Date
+                            row.find("td:eq(5)").html(""); // Clear button
+                            row.find("td:eq(6)").text(format(res.dueDate)); // Due Date
+                            row.find("td:eq(7)").text("-"); // Return Date
+                            row.find("td:eq(8)").html(`
     <button class='buttonStyle returnAction' data-id='${button.data("id")}' data-due='${res.dueDate}'>
         <i class='fa fa-check iconStyle'></i>
     </button>
@@ -257,10 +259,10 @@ include("../connect.php");
                 }
 
                 if (confirm("Are you sure the equipment has been returned?")) {
-                    row.cells[6].innerHTML = isLate ?
+                    row.cells[7].innerHTML = isLate ?
                         `<span style='color: red; font-weight: bold;'>${today}</span>` :
                         today;
-                    row.cells[7].innerHTML = "";
+                    row.cells[8].innerHTML = "";
 
                     $.post("updateReturnDate.php", {
                         id: button.data("id")
